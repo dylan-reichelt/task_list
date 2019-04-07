@@ -1,3 +1,6 @@
 .vscode
 /.metadata/
 task_list/.classpath
+.classpath
+.project
+.recommenders
