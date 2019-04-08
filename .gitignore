@@ -4,4 +4,4 @@ task_list/.classpath
 task_list\.classpath
 .classpath
 .project
-.recommenders
+.recommenders/*
