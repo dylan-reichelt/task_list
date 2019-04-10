@@ -3,6 +3,8 @@ package app;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import com.sun.javafx.binding.Logging;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
@@ -10,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -51,7 +54,7 @@ public class App extends Application {
         							FontWeight.BOLD,
         							FontPosture.ITALIC, 40));
         toDoLabel.setLayoutX(15);
-        toDoLabel.setLayoutY(10);
+        toDoLabel.setLayoutY(20);
         
         //Making the drop down for filtering
         ObservableList<String> filter = 
@@ -62,10 +65,10 @@ public class App extends Application {
         			"Date Started");
         
         
-        final ComboBox filterBox = new ComboBox(filter);
+        final ComboBox<String> filterBox = new ComboBox<String>(filter);
         filterBox.setPrefSize(250, 50);
         filterBox.setLayoutX(275);
-        filterBox.setLayoutY(10);
+        filterBox.setLayoutY(20);
         filterBox.setStyle("-fx-font-size:20");
         
         if(filterBox.getValue() == null)
@@ -91,7 +94,7 @@ public class App extends Application {
 		}
         addButton.setStyle("-fx-font-size:20");
         addButton.setLayoutX(550);
-        addButton.setLayoutY(10);
+        addButton.setLayoutY(20);
         addButton.setPrefSize(175, 50);
         
         //Restart Button
@@ -113,29 +116,38 @@ public class App extends Application {
         
         restartButton.setStyle("-fx-font-size:20");
         restartButton.setLayoutX(750);
-        restartButton.setLayoutY(10);
+        restartButton.setLayoutY(20);
         restartButton.setPrefSize(175, 50);
        
         //Print Button
         Button printButton = new Button ("Print");
         printButton.setStyle("-fx-font-size:20");
         printButton.setLayoutX(950);
-        printButton.setLayoutY(10);
+        printButton.setLayoutY(20);
         printButton.setPrefSize(150, 50);
         
         //Save Button
         Button saveButton = new Button ("Save");
         saveButton.setStyle("-fx-font-size:20");
         saveButton.setLayoutX(1125);
-        saveButton.setLayoutY(10);
+        saveButton.setLayoutY(20);
         saveButton.setPrefSize(150, 50);
         
         //Load Button
         Button loadButton = new Button ("Load");
         loadButton.setStyle("-fx-font-size:20");
         loadButton.setLayoutX(1300);
-        loadButton.setLayoutY(10);
+        loadButton.setLayoutY(20);
         loadButton.setPrefSize(150, 50);
+        
+        //Text of tasks
+        TextArea task_text = new TextArea();
+        task_text.setPrefWidth(1445);
+        task_text.setPrefHeight(790);
+        task_text.setLayoutX(15);
+        task_text.setLayoutY(95);
+        
+        task_text.setEditable(false);
         
         //Adding the pane and the items to the pane
         Pane layout = new Pane();
@@ -146,6 +158,7 @@ public class App extends Application {
         layout.getChildren().add(printButton);
         layout.getChildren().add(saveButton);
         layout.getChildren().add(loadButton);
+        layout.getChildren().add(task_text);
         
         //Adding the layout to the scene and setting up scene
         Scene scene = new Scene (layout);
