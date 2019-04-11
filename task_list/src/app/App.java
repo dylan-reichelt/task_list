@@ -156,7 +156,7 @@ public class App extends Application {
         
         //Text of tasks
         TextArea task_text = new TextArea();
-        task_text.setPrefWidth(1445);
+        task_text.setPrefWidth(1425);
         task_text.setPrefHeight(790);
         task_text.setLayoutX(15);
         task_text.setLayoutY(95);
@@ -203,7 +203,7 @@ public class App extends Application {
     	entryWin.setTitle("Add Task Entry");
     	entryWin.setX(stage.getX() + 100);
     	entryWin.setY(stage.getY() + 100);
-    	entryWin.setHeight(600);
+    	entryWin.setHeight(450);
     	entryWin.setWidth(800);
     	
     	//Creates the descLabel and textBox to type in
@@ -229,20 +229,35 @@ public class App extends Application {
         		FontPosture.REGULAR, 20));
         DatePicker dueDate = new DatePicker();
         dateLable.setLayoutX(15);
-        dateLable.setLayoutY(300);
+        dateLable.setLayoutY(310);
         dueDate.setLayoutX(15);
-        dueDate.setLayoutY(330);
+        dueDate.setLayoutY(340);
         dueDate.setEditable(false);
         dueDate.setMaxSize(200, 75);
         dueDate.setStyle("-fx-font-size:20");
         
         //Create Priority Label and text box
-        Label prioLabel = new Label("Priority:");
+        Label prioLabel = new Label("Priority Number:");
         prioLabel.setFont(Font.font("verdana",
         		FontWeight.NORMAL,
         		FontPosture.REGULAR, 20));
         prioLabel.setLayoutX(250);
-        prioLabel.setLayoutY(300);
+        prioLabel.setLayoutY(310);
+        
+        TextArea prioText = new TextArea("Number");
+        prioText.setLayoutX(250);
+        prioText.setLayoutY(340);
+        prioText.setMinSize(200, 45);
+        prioText.setMaxSize(200, 45);
+        prioText.setStyle("-fx-font-size:20");
+        
+        //Create the accept button
+        Button acceptButton = new Button ("Accept");
+        acceptButton.setStyle("-fx-font-size:20");
+        acceptButton.setLayoutX(550);
+        acceptButton.setLayoutY(340);
+        acceptButton.setPrefSize(150, 40);
+        
     	
         //Adding the items to the pane
     	Pane layout = new Pane();
@@ -251,6 +266,8 @@ public class App extends Application {
     	layout.getChildren().add(dueDate);
     	layout.getChildren().add(dateLable);
     	layout.getChildren().add(prioLabel);
+    	layout.getChildren().add(prioText);
+    	layout.getChildren().add(acceptButton);
     	
     	Scene entryScene = new Scene(layout);
     	Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
