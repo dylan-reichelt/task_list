@@ -106,7 +106,13 @@ public class App extends Application {
         	@Override
         	public void handle(ActionEvent event)
         	{
-        		entryWindow(stage);
+        		entryPop tempWin = new entryPop();
+        		taskEntry tempTask = new taskEntry();
+        		tempTask = tempWin.entryWindow(stage);
+        		System.out.println(tempTask.getDesc());
+        		System.out.println(tempTask.getDue());
+        		System.out.println(tempTask.getPriority());
+        		
         		//CREATE TASK FROM taskEntry Class AND ADD IT TO THE BIG LIST
         	}
         });
@@ -176,7 +182,6 @@ public class App extends Application {
         
         //Adding the layout to the scene and setting up scene
         Scene scene = new Scene (layout);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         //set Stage boundaries to visible bounds of the main screen
         stage.setWidth(1475);
@@ -194,88 +199,116 @@ public class App extends Application {
      * @param stage
      * @return taskEntry
      */
-    private Object entryWindow(Stage stage)
+    
+    class entryPop
     {
-    	//Creates the stage of the new window making it a module of the mainstage
-    	Stage entryWin = new Stage();
-    	entryWin.initModality(Modality.WINDOW_MODAL);
-    	entryWin.initOwner(stage);
-    	entryWin.setTitle("Add Task Entry");
-    	entryWin.setX(stage.getX() + 100);
-    	entryWin.setY(stage.getY() + 100);
-    	entryWin.setHeight(450);
-    	entryWin.setWidth(800);
-    	
-    	//Creates the descLabel and textBox to type in
-    	Label descLabel = new Label("Description");
-    	descLabel.setFont(Font.font("verdana",
-				FontWeight.BOLD,
-				FontPosture.REGULAR, 20));
-    	descLabel.setLayoutX(15);
-        descLabel.setLayoutY(20);
-        
-        TextArea descText = new TextArea("Description...");
-        descText.setLayoutX(15);
-        descText.setLayoutY(50);
-        descText.setFont(Font.font("verdana",
-        		FontWeight.NORMAL,
-        		FontPosture.REGULAR,
-        		18));
-        
-        //Create the datePicker for dueDate and Label
-        Label dateLable = new Label("Due Date:");
-        dateLable.setFont(Font.font("verdana",
-        		FontWeight.NORMAL,
-        		FontPosture.REGULAR, 20));
-        DatePicker dueDate = new DatePicker();
-        dateLable.setLayoutX(15);
-        dateLable.setLayoutY(310);
-        dueDate.setLayoutX(15);
-        dueDate.setLayoutY(340);
-        dueDate.setEditable(false);
-        dueDate.setMaxSize(200, 75);
-        dueDate.setStyle("-fx-font-size:20");
-        
-        //Create Priority Label and text box
-        Label prioLabel = new Label("Priority Number:");
-        prioLabel.setFont(Font.font("verdana",
-        		FontWeight.NORMAL,
-        		FontPosture.REGULAR, 20));
-        prioLabel.setLayoutX(250);
-        prioLabel.setLayoutY(310);
-        
-        TextArea prioText = new TextArea("Number");
-        prioText.setLayoutX(250);
-        prioText.setLayoutY(340);
-        prioText.setMinSize(200, 45);
-        prioText.setMaxSize(200, 45);
-        prioText.setStyle("-fx-font-size:20");
-        
-        //Create the accept button
-        Button acceptButton = new Button ("Accept");
-        acceptButton.setStyle("-fx-font-size:20");
-        acceptButton.setLayoutX(550);
-        acceptButton.setLayoutY(340);
-        acceptButton.setPrefSize(150, 40);
-        
-    	
-        //Adding the items to the pane
-    	Pane layout = new Pane();
-    	layout.getChildren().add(descLabel);
-    	layout.getChildren().add(descText);
-    	layout.getChildren().add(dueDate);
-    	layout.getChildren().add(dateLable);
-    	layout.getChildren().add(prioLabel);
-    	layout.getChildren().add(prioText);
-    	layout.getChildren().add(acceptButton);
-    	
-    	Scene entryScene = new Scene(layout);
-    	Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-    	
     	taskEntry tempTask = new taskEntry();
+    	int prioNum;
     	
-    	entryWin.setScene(entryScene);
-    	entryWin.show();
-    	return tempTask;
+    	public taskEntry entryWindow(Stage stage)
+        {
+        	//Creates the stage of the new window making it a module of the mainstage
+        	Stage entryWin = new Stage();
+        	entryWin.initModality(Modality.WINDOW_MODAL);
+        	entryWin.initOwner(stage);
+        	entryWin.setTitle("Add Task Entry");
+        	entryWin.setX(stage.getX() + 100);
+        	entryWin.setY(stage.getY() + 100);
+        	entryWin.setHeight(450);
+        	entryWin.setWidth(800);
+        	
+        	//Creates the descLabel and textBox to type in
+        	Label descLabel = new Label("Description");
+        	descLabel.setFont(Font.font("verdana",
+    				FontWeight.BOLD,
+    				FontPosture.REGULAR, 20));
+        	descLabel.setLayoutX(15);
+            descLabel.setLayoutY(20);
+            
+            TextArea descText = new TextArea("Description...");
+            descText.setLayoutX(15);
+            descText.setLayoutY(50);
+            descText.setFont(Font.font("verdana",
+            		FontWeight.NORMAL,
+            		FontPosture.REGULAR,
+            		18));
+            
+            //Create the datePicker for dueDate and Label
+            Label dateLable = new Label("Due Date:");
+            dateLable.setFont(Font.font("verdana",
+            		FontWeight.NORMAL,
+            		FontPosture.REGULAR, 20));
+            DatePicker dueDate = new DatePicker();
+            dateLable.setLayoutX(15);
+            dateLable.setLayoutY(310);
+            dueDate.setLayoutX(15);
+            dueDate.setLayoutY(340);
+            dueDate.setEditable(false);
+            dueDate.setMaxSize(200, 75);
+            dueDate.setStyle("-fx-font-size:20");
+            
+            //Create Priority Label and text box
+            Label prioLabel = new Label("Priority Number:");
+            prioLabel.setFont(Font.font("verdana",
+            		FontWeight.NORMAL,
+            		FontPosture.REGULAR, 20));
+            prioLabel.setLayoutX(250);
+            prioLabel.setLayoutY(310);
+            
+            TextArea prioText = new TextArea("Number");
+            prioText.setLayoutX(250);
+            prioText.setLayoutY(340);
+            prioText.setMinSize(200, 45);
+            prioText.setMaxSize(200, 45);
+            prioText.setStyle("-fx-font-size:20");
+            
+            //Create the accept button and the event on click
+            Button acceptButton = new Button ("Accept");
+            acceptButton.setStyle("-fx-font-size:20");
+            acceptButton.setLayoutX(550);
+            acceptButton.setLayoutY(340);
+            acceptButton.setPrefSize(150, 40);
+            
+            acceptButton.setOnAction(new EventHandler<ActionEvent>() {
+            	@Override
+            	public void handle(ActionEvent event)
+            	{
+            		try
+            		{
+            			prioNum = Integer.parseInt(prioText.getText());
+            		}
+            		catch(NumberFormatException e)
+            		{
+            			System.out.println("Sorry priority not a number");
+            		}
+            		
+            		if(descText.getText() == "Description" || dateLable.getText() == "")
+            		{
+            			System.out.println("Wrong Input");
+            		}
+            		else
+            		{
+            			tempTask.setDesc(descText.getText());
+            			tempTask.setDue(dueDate.getValue());
+            			tempTask.setPriority(prioNum);
+            			entryWin.close();
+            		}
+            	}
+            });
+        	
+            //Adding the items to the pane
+        	Pane layout = new Pane();
+        	layout.getChildren().add(descLabel);
+        	layout.getChildren().add(descText);
+        	layout.getChildren().add(dueDate);
+        	layout.getChildren().add(dateLable);
+        	layout.getChildren().add(prioLabel);
+        	layout.getChildren().add(prioText);
+        	layout.getChildren().add(acceptButton);
+        	Scene entryScene = new Scene(layout);
+        	entryWin.setScene(entryScene);
+        	entryWin.showAndWait();
+        	return tempTask;
+        }
     }
 }

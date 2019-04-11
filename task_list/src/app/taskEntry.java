@@ -1,8 +1,10 @@
 package app;
 
+import java.time.LocalDate;
+
 public class taskEntry {
 	private String Description;
-	private String dueDate;
+	private LocalDate dueDate;
 	private String startDate;
 	
 	private int status;
@@ -23,7 +25,7 @@ public class taskEntry {
 		startDate = start;
 	}
 	
-	void setDue(String due)
+	void setDue(LocalDate due)
 	{
 		dueDate = due;
 	}
@@ -43,7 +45,7 @@ public class taskEntry {
 		return priority;
 	}
 	
-	public String getDue()
+	public LocalDate getDue()
 	{
 		return dueDate;
 	}
