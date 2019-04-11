@@ -7,14 +7,17 @@ import com.sun.javafx.binding.Logging;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -25,6 +28,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 public class App extends Application {
 
@@ -60,9 +65,10 @@ public class App extends Application {
         ObservableList<String> filter = 
         	FXCollections.observableArrayList(
         			"Filter By...",
-        			"Priority",
         			"Description",
-        			"Date Started");
+        			"Due Date",
+        			"Priority",
+        			"Status");
         
         
         final ComboBox<String> filterBox = new ComboBox<String>(filter);
@@ -96,6 +102,14 @@ public class App extends Application {
         addButton.setLayoutX(550);
         addButton.setLayoutY(20);
         addButton.setPrefSize(175, 50);
+        addButton.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event)
+        	{
+        		entryWindow(stage);
+        		//CREATE TASK FROM taskEntry Class AND ADD IT TO THE BIG LIST
+        	}
+        });
         
         //Restart Button
         Button restartButton = null;
@@ -172,4 +186,79 @@ public class App extends Application {
         stage.show();
     }
 
+    
+    /**
+     * This creates the entryWindow Pop-up to put in the information for a task.
+     * It then returns the entry as a new taskEntry so it can be loaded into the main window.
+     * 
+     * @param stage
+     * @return taskEntry
+     */
+    private Object entryWindow(Stage stage)
+    {
+    	//Creates the stage of the new window making it a module of the mainstage
+    	Stage entryWin = new Stage();
+    	entryWin.initModality(Modality.WINDOW_MODAL);
+    	entryWin.initOwner(stage);
+    	entryWin.setTitle("Add Task Entry");
+    	entryWin.setX(stage.getX() + 100);
+    	entryWin.setY(stage.getY() + 100);
+    	entryWin.setHeight(600);
+    	entryWin.setWidth(800);
+    	
+    	//Creates the descLabel and textBox to type in
+    	Label descLabel = new Label("Description");
+    	descLabel.setFont(Font.font("verdana",
+				FontWeight.BOLD,
+				FontPosture.REGULAR, 20));
+    	descLabel.setLayoutX(15);
+        descLabel.setLayoutY(20);
+        
+        TextArea descText = new TextArea("Description...");
+        descText.setLayoutX(15);
+        descText.setLayoutY(50);
+        descText.setFont(Font.font("verdana",
+        		FontWeight.NORMAL,
+        		FontPosture.REGULAR,
+        		18));
+        
+        //Create the datePicker for dueDate and Label
+        Label dateLable = new Label("Due Date:");
+        dateLable.setFont(Font.font("verdana",
+        		FontWeight.NORMAL,
+        		FontPosture.REGULAR, 20));
+        DatePicker dueDate = new DatePicker();
+        dateLable.setLayoutX(15);
+        dateLable.setLayoutY(300);
+        dueDate.setLayoutX(15);
+        dueDate.setLayoutY(330);
+        dueDate.setEditable(false);
+        dueDate.setMaxSize(200, 75);
+        dueDate.setStyle("-fx-font-size:20");
+        
+        //Create Priority Label and text box
+        Label prioLabel = new Label("Priority:");
+        prioLabel.setFont(Font.font("verdana",
+        		FontWeight.NORMAL,
+        		FontPosture.REGULAR, 20));
+        prioLabel.setLayoutX(250);
+        prioLabel.setLayoutY(300);
+    	
+        //Adding the items to the pane
+    	Pane layout = new Pane();
+    	layout.getChildren().add(descLabel);
+    	layout.getChildren().add(descText);
+    	layout.getChildren().add(dueDate);
+    	layout.getChildren().add(dateLable);
+    	layout.getChildren().add(prioLabel);
+    	
+    	Scene entryScene = new Scene(layout);
+    	Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    	
+    	taskEntry tempTask = new taskEntry();
+    	
+    	entryWin.setScene(entryScene);
+    	entryWin.show();
+    	return tempTask;
+    }
 }
