@@ -35,8 +35,7 @@ import javafx.event.EventHandler;
 public class App extends Application { 
 	
 	// CLASS VARIABLES
-	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>(); // List for the tasks
-	TextArea task_text = new TextArea();
+	taskList taskTable = new taskList();
 	
     @Override
     public void start(Stage stage) {
@@ -67,6 +66,7 @@ public class App extends Application {
         toDoLabel.setLayoutY(20);
         
         //Text of tasks
+        TextArea task_text = new TextArea();
         task_text.setPrefWidth(1425);
         task_text.setPrefHeight(790);
         task_text.setLayoutX(15);
@@ -128,8 +128,8 @@ public class App extends Application {
         		System.out.println(tempTask.getPriority());
         		if(tempTask.getDesc() != null || tempTask.getDue() != null)
         		{
-            		addToList(tempTask);
-            		refreshList();
+            		taskTable.addToList(tempTask);
+            		taskTable.refreshList(task_text);
         		}
         		//CREATE TASK FROM taskEntry Class AND ADD IT TO THE BIG LIST
         	}
@@ -200,69 +200,7 @@ public class App extends Application {
         stage.show();
     }
     
-    /**
-     * Takes in a task and adds it to the taskArray depending on it's priority location
-     * 
-     * @param task
-     */
-    private void addToList(taskEntry task)
-    {
-    	int location = 0;
-    	boolean priorityHit = false;
-    	
-    	if(taskArray.size() < 1)
-    	{
-    		task.setPriority(1);
-    		taskArray.add(task);
-    	}
-    	else
-    	{
-    		for(int tempNum = 0; tempNum < taskArray.size(); tempNum++)
-    		{
-    			taskEntry tempTask = taskArray.get(tempNum);
-    			if(task.getPriority() == tempTask.getPriority())
-    			{
-    				System.out.println("PRIORITY HIT");
-    				priorityHit = true;
-    				location = tempNum;
-    			}
-    		}
-    		
-    		if(priorityHit == true)
-    		{
-    			task.setPriority(taskArray.size());
-    			taskArray.add(location, task);
-    			
-    			for(int tempNum = location; tempNum < taskArray.size(); tempNum ++)
-    			{
-    				taskArray.get(tempNum).setPriority(tempNum + 1);
-    			}
-    		}
-    		else
-    		{
-    			task.setPriority(taskArray.size() + 1);
-    			taskArray.add(task);
-    		}
-    		
-    	}
-    }
     
-    /**
-     * Prints out the tasks to the task_text box
-     */
-    private void refreshList()
-    {
-    	String input = "";
-    	for(int i = 0; i < taskArray.size(); i++)
-    	{
-    		taskEntry tempEntry = taskArray.get(i);
-    		input = input + "Description: " + tempEntry.getDesc() + "\n" + 
-    				"Priority: " + tempEntry.getPriority() + "\n" + 
-    				"Due Date: " + tempEntry.getDue() + "\n\n";
-    	}
-    	
-    	task_text.setText(input);
-    }
     
     /**
      * This class creates the entryPopup which allows for one to create a task entry
