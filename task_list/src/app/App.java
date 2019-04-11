@@ -204,6 +204,7 @@ public class App extends Application {
     {
     	taskEntry tempTask = new taskEntry();
     	int prioNum;
+    	boolean prioRight = true;
     	
     	public taskEntry entryWindow(Stage stage)
         {
@@ -280,9 +281,10 @@ public class App extends Application {
             		catch(NumberFormatException e)
             		{
             			System.out.println("Sorry priority not a number");
+            			prioRight = false;
             		}
             		
-            		if(descText.getText() == "Description" || dateLable.getText() == "")
+            		if(dueDate.getValue() == null || prioRight == false)
             		{
             			System.out.println("Wrong Input");
             		}
