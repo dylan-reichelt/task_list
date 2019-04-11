@@ -2,6 +2,7 @@ package app;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import com.sun.javafx.binding.Logging;
 
@@ -31,8 +32,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-public class App extends Application {
-
+public class App extends Application { 
+	
+	// CLASS VARIABLES
+	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>(); // List for the tasks
+	TextArea task_text = new TextArea();
+	
     @Override
     public void start(Stage stage) {
     	mainWindow(stage);
@@ -52,7 +57,7 @@ public class App extends Application {
      */
     
     public void mainWindow(Stage stage)
-    {
+    {	
     	// Settings for label
         Label toDoLabel = new Label("To-Do List");
         toDoLabel.setFont(Font.font("verdana",
@@ -60,6 +65,15 @@ public class App extends Application {
         							FontPosture.ITALIC, 40));
         toDoLabel.setLayoutX(15);
         toDoLabel.setLayoutY(20);
+        
+        //Text of tasks
+        task_text.setPrefWidth(1425);
+        task_text.setPrefHeight(790);
+        task_text.setLayoutX(15);
+        task_text.setLayoutY(95);
+        task_text.setEditable(false);
+        task_text.setStyle("-fx-font-size:20");
+        
         
         //Making the drop down for filtering
         ObservableList<String> filter = 
@@ -112,7 +126,11 @@ public class App extends Application {
         		System.out.println(tempTask.getDesc());
         		System.out.println(tempTask.getDue());
         		System.out.println(tempTask.getPriority());
-        		
+        		if(tempTask.getDesc() != null || tempTask.getDue() != null)
+        		{
+            		addToList(tempTask);
+            		refreshList();
+        		}
         		//CREATE TASK FROM taskEntry Class AND ADD IT TO THE BIG LIST
         	}
         });
@@ -160,15 +178,6 @@ public class App extends Application {
         loadButton.setLayoutY(20);
         loadButton.setPrefSize(150, 50);
         
-        //Text of tasks
-        TextArea task_text = new TextArea();
-        task_text.setPrefWidth(1425);
-        task_text.setPrefHeight(790);
-        task_text.setLayoutX(15);
-        task_text.setLayoutY(95);
-        
-        task_text.setEditable(false);
-        
         //Adding the pane and the items to the pane
         Pane layout = new Pane();
         layout.getChildren().add(toDoLabel);
@@ -190,22 +199,93 @@ public class App extends Application {
         stage.setTitle("TMI"); //TMI For Task Management Interface
         stage.show();
     }
-
     
     /**
-     * This creates the entryWindow Pop-up to put in the information for a task.
-     * It then returns the entry as a new taskEntry so it can be loaded into the main window.
+     * Takes in a task and adds it to the taskArray depending on it's priority location
      * 
-     * @param stage
-     * @return taskEntry
+     * @param task
      */
+    private void addToList(taskEntry task)
+    {
+    	int location = 0;
+    	boolean priorityHit = false;
+    	
+    	if(taskArray.size() < 1)
+    	{
+    		task.setPriority(1);
+    		taskArray.add(task);
+    	}
+    	else
+    	{
+    		for(int tempNum = 0; tempNum < taskArray.size(); tempNum++)
+    		{
+    			taskEntry tempTask = taskArray.get(tempNum);
+    			if(task.getPriority() == tempTask.getPriority())
+    			{
+    				System.out.println("PRIORITY HIT");
+    				priorityHit = true;
+    				location = tempNum;
+    			}
+    		}
+    		
+    		if(priorityHit == true)
+    		{
+    			task.setPriority(taskArray.size());
+    			taskArray.add(location, task);
+    			
+    			for(int tempNum = location; tempNum < taskArray.size(); tempNum ++)
+    			{
+    				taskArray.get(tempNum).setPriority(tempNum + 1);
+    			}
+    		}
+    		else
+    		{
+    			task.setPriority(taskArray.size() + 1);
+    			taskArray.add(task);
+    		}
+    		
+    	}
+    }
     
+    /**
+     * Prints out the tasks to the task_text box
+     */
+    private void refreshList()
+    {
+    	String input = "";
+    	for(int i = 0; i < taskArray.size(); i++)
+    	{
+    		taskEntry tempEntry = taskArray.get(i);
+    		input = input + "Description: " + tempEntry.getDesc() + "\n" + 
+    				"Priority: " + tempEntry.getPriority() + "\n" + 
+    				"Due Date: " + tempEntry.getDue() + "\n\n";
+    	}
+    	
+    	task_text.setText(input);
+    }
+    
+    /**
+     * This class creates the entryPopup which allows for one to create a task entry
+     * 
+     * @functions
+     * entryWindow(Stage stage)
+     * 
+     * @author Dylan
+     *
+     */
     class entryPop
     {
     	taskEntry tempTask = new taskEntry();
     	int prioNum;
     	boolean prioRight = true;
     	
+    	/**
+    	 * Creates the entry window and then waits until the accept button is clicked or the window is closed to
+    	 * return data. Returns a taskEntry object so it can be added to the arrayList later.
+    	 * 
+    	 * @param stage
+    	 * @return taskEntry
+    	 */
     	public taskEntry entryWindow(Stage stage)
         {
         	//Creates the stage of the new window making it a module of the mainstage
