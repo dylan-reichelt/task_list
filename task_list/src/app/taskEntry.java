@@ -10,27 +10,27 @@ public class taskEntry {
 	private int status;
 	private int priority;
 	
-	void setDesc(String description)
+	public void setDesc(String description)
 	{
 		Description = description;
 	}
 	
-	void setPriority(int tempPrio)
+	public void setPriority(int tempPrio)
 	{
 		priority = tempPrio;
 	}
 	
-	void setStart(String start)
+	public void setStart(String start)
 	{
 		startDate = start;
 	}
 	
-	void setDue(LocalDate due)
+	public void setDue(LocalDate due)
 	{
 		dueDate = due;
 	}
 	
-	void setStatus(int tempStatus)
+	public void setStatus(int tempStatus)
 	{
 		status = tempStatus;
 	}

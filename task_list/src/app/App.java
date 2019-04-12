@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import com.sun.javafx.binding.Logging;
 
+import app.taskEntry;
+import app.taskList;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
