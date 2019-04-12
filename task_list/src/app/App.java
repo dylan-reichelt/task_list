@@ -125,9 +125,6 @@ public class App extends Application {
         		entryPop tempWin = new entryPop();
         		taskEntry tempTask = new taskEntry();
         		tempTask = tempWin.entryWindow(stage);
-        		System.out.println(tempTask.getDesc());
-        		System.out.println(tempTask.getDue());
-        		System.out.println(tempTask.getPriority());
         		if(tempTask.getDesc() != null || tempTask.getDue() != null)
         		{
             		taskTable.addToList(tempTask);
