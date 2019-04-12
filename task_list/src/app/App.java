@@ -68,13 +68,23 @@ public class App extends Application {
         toDoLabel.setLayoutY(20);
         
         //Text of tasks
-        TextArea task_text = new TextArea();
+        ListView<String> task_text = new ListView<String>();
         task_text.setPrefWidth(1425);
         task_text.setPrefHeight(790);
         task_text.setLayoutX(15);
         task_text.setLayoutY(95);
         task_text.setEditable(false);
         task_text.setStyle("-fx-font-size:20");
+        task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        	@Override
+        	public void handle(MouseEvent click) {
+        		if(click.getClickCount() == 2)
+        		{
+        			int selectedIndex = task_text.getSelectionModel().getSelectedIndex();
+        			System.out.println(selectedIndex);
+        		}
+        	}
+        });
         
         
         //Making the drop down for filtering
@@ -304,6 +314,7 @@ public class App extends Application {
             		if(dueDate.getValue() == null || prioRight == false)
             		{
             			System.out.println("Wrong Input");
+            			prioRight = true;
             		}
             		else
             		{
