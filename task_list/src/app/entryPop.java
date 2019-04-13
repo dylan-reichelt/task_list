@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -30,13 +31,13 @@ class entryPop
 	boolean prioRight = true;
 	
 	/**
-	 * Creates the entry window and then waits until the accept button is clicked or the window is closed to
-	 * return data. Returns a taskEntry object so it can be added to the arrayList later.
+	 * Creates the entry window and then adds it to the list. If it returns that the entry is invalid then it prompts the user to
+	 * try again. If the user decides they no longer want to make a new task they simply click the x on the window.
 	 * 
 	 * @param stage
-	 * @return taskEntry
+	 * @void
 	 */
-	public taskEntry entryWindow(Stage stage)
+	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list)
     {
     	//Creates the stage of the new window making it a module of the mainstage
     	Stage entryWin = new Stage();
@@ -114,7 +115,7 @@ class entryPop
         			prioRight = false;
         		}
         		
-        		if(dueDate.getValue() == null || prioRight == false)
+        		if(prioRight == false)
         		{
         			System.out.println("Wrong Input");
         			prioRight = true;
@@ -124,7 +125,15 @@ class entryPop
         			tempTask.setDesc(descText.getText());
         			tempTask.setDue(dueDate.getValue());
         			tempTask.setPriority(prioNum);
-        			entryWin.close();
+        			if(taskTable.addToList(tempTask))
+        			{
+        				taskTable.refreshList(text_list);
+        				entryWin.close();
+        			}
+        			else
+        			{
+        				System.out.println("NOT VALID");
+        			}
         		}
         	}
         });
@@ -141,6 +150,5 @@ class entryPop
     	Scene entryScene = new Scene(layout);
     	entryWin.setScene(entryScene);
     	entryWin.showAndWait();
-    	return tempTask;
     }
 }

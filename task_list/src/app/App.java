@@ -80,8 +80,9 @@ public class App extends Application {
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
         		{
-        			int selectedIndex = task_text.getSelectionModel().getSelectedIndex();
-        			System.out.println(selectedIndex);
+        			int selectedTask = task_text.getSelectionModel().getSelectedIndex();
+        			String selectedString = task_text.getSelectionModel().getSelectedItem();
+        			System.out.println(selectedTask);
         		}
         	}
         });
@@ -133,14 +134,7 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		entryPop tempWin = new entryPop();
-        		taskEntry tempTask = new taskEntry();
-        		tempTask = tempWin.entryWindow(stage);
-        		if(tempTask.getDesc() != null || tempTask.getDue() != null)
-        		{
-            		taskTable.addToList(tempTask);
-            		taskTable.refreshList(task_text);
-        		}
-        		//CREATE TASK FROM taskEntry Class AND ADD IT TO THE BIG LIST
+        		tempWin.entryWindow(stage, taskTable, task_text);
         	}
         });
         

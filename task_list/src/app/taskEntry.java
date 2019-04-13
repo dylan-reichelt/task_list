@@ -76,13 +76,24 @@ public class taskEntry {
 		return "Not Started";
 	}
 	
-	public void decrementPriority()
+	public String getTaskPrint()
 	{
-		priority--;
-	}
-	
-	public void incrementPriority()
-	{
-		priority++;
+		String tempString = "Description: " + getDesc() + "\n" +
+				"Priority: " + getPriority();
+				
+		
+		if(getStart() == null)
+		{
+			tempString = tempString + "\nStart Date: NA";
+		}
+		else
+		{
+			tempString = tempString + "\nStart Date: " + getStart();
+		}
+		
+		tempString = tempString + "\nDue Date: " + getDue() + "\n" +
+				"Status: " + getStatus();
+		
+		return tempString;
 	}
 }
