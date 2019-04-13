@@ -85,4 +85,25 @@ public class taskEntry {
 	{
 		priority++;
 	}
+	
+	public String getTaskPrint()
+	{
+		String tempString = "Description: " + getDesc() + "\n" +
+				"Priority: " + getPriority();
+				
+		
+		if(getStart() == null)
+		{
+			tempString = tempString + "\nStart Date: NA";
+		}
+		else
+		{
+			tempString = tempString + "\nStart Date: " + getStart();
+		}
+		
+		tempString = tempString + "\nDue Date: " + getDue() + "\n" +
+				"Status: " + getStatus();
+		
+		return tempString;
+	}
 }

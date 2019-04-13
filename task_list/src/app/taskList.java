@@ -2,8 +2,10 @@ package app;
 
 import java.util.ArrayList;
 
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.util.Callback;
 
 public class taskList {
 	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>(); // List for the tasks
@@ -14,16 +16,12 @@ public class taskList {
     public void refreshList(ListView<String> task_text)
     {
     	task_text.getItems().clear();
-
     	for(int i = 0; i < taskArray.size(); i++)
     	{
     		taskEntry tempEntry = taskArray.get(i);
-    		String input = "Description: " + tempEntry.getDesc() + "\n" +
-    				"Priority: " + tempEntry.getPriority() + "\n" +
-    				"Due Date: " + tempEntry.getDue() + "\n" +
-    				"Status: " + tempEntry.getStatus();
+    		String input = tempEntry.getTaskPrint();
     		task_text.getItems().add(input);
-    	}
+    	} 
     }
     
     /**
