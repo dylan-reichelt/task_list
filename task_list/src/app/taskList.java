@@ -22,7 +22,6 @@ public class taskList {
     				"Priority: " + tempEntry.getPriority() + "\n" +
     				"Due Date: " + tempEntry.getDue() + "\n" +
     				"Status: " + tempEntry.getStatus();
-    		System.out.println(input);
     		task_text.getItems().add(input);
     	}
     }
@@ -35,6 +34,8 @@ public class taskList {
      */
     public void addToList(taskEntry task)
     {
+    	
+    	int newPriority = task.getPriority();
     	int location = 0;
     	boolean priorityHit = false;
     	
