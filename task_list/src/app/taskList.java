@@ -2,6 +2,7 @@ package app;
 
 import java.util.ArrayList;
 
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 public class taskList {
@@ -10,18 +11,19 @@ public class taskList {
 	/**
      * Prints out the tasks to the task_text box
      */
-    public void refreshList(TextArea task_text)
+    public void refreshList(ListView<String> task_text)
     {
-    	String input = "";
+    	task_text.getItems().clear();
+
     	for(int i = 0; i < taskArray.size(); i++)
     	{
     		taskEntry tempEntry = taskArray.get(i);
-    		input = input + "Description: " + tempEntry.getDesc() + "\n" + 
-    				"Priority: " + tempEntry.getPriority() + "\n" + 
-    				"Due Date: " + tempEntry.getDue() + "\n\n";
+    		String input = "Description: " + tempEntry.getDesc() + "\n" +
+    				"Priority: " + tempEntry.getPriority() + "\n" +
+    				"Due Date: " + tempEntry.getDue() + "\n" +
+    				"Status: " + tempEntry.getStatus();
+    		task_text.getItems().add(input);
     	}
-    	
-    	task_text.setText(input);
     }
     
     /**
@@ -32,6 +34,8 @@ public class taskList {
      */
     public void addToList(taskEntry task)
     {
+    	
+    	int newPriority = task.getPriority();
     	int location = 0;
     	boolean priorityHit = false;
     	
