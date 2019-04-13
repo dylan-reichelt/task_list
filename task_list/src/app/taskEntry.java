@@ -76,16 +76,6 @@ public class taskEntry {
 		return "Not Started";
 	}
 	
-	public void decrementPriority()
-	{
-		priority--;
-	}
-	
-	public void incrementPriority()
-	{
-		priority++;
-	}
-	
 	public String getTaskPrint()
 	{
 		String tempString = "Description: " + getDesc() + "\n" +
