@@ -63,7 +63,7 @@ public class taskEntry {
 		}
 		else if(status == 1)
 		{
-			return "Started";
+			return "In Progress";
 		}
 		else if(status == 2)
 		{

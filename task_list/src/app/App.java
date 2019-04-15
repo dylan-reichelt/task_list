@@ -80,9 +80,8 @@ public class App extends Application {
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
         		{
-        			int selectedTask = task_text.getSelectionModel().getSelectedIndex();
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
-        			System.out.println(selectedTask);
+        			System.out.println(selectedString);
         		}
         	}
         });
