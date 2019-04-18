@@ -94,17 +94,14 @@ public class taskList {
     		taskEntry tempTask = taskArray.get(num);
     		if(tempTask.getDesc().equalsIgnoreCase(task.getDesc()))
     		{
-    			System.out.println("NOT VALID 1");
     			valid = false;
     	
     		}
     	}
     	if(task.getDesc() == null || task.getDue() == null)
 		{
-    		System.out.println("NOT VALID 2");
     		valid = false;
 		}
-    	System.out.println("VALID");
     	return valid;
     
     }
