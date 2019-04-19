@@ -1,7 +1,9 @@
 package app;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -33,7 +35,6 @@ public class taskList {
      */
     public boolean addToList(taskEntry task)
     {
-    	
     	int location = 0;
     	boolean priorityHit = false;
     	
@@ -73,11 +74,34 @@ public class taskList {
     				task.setPriority(taskArray.size() + 1);
     				taskArray.add(task);
     			}
-    		
     		}
     		return true;
     	}
     	return false;
+    }
+    
+    public void restartList(ListView<String> task_text) {
+    	task_text.getItems().clear();
+    	taskArray.clear();
+    }
+    
+    public int getSize() {
+    	return taskArray.size();
+    }
+    
+    public String parseList() {
+    	String textParse = "";
+    	for(int i = 0; i < taskArray.size(); i++)
+    	{
+    		taskEntry tempEntry = taskArray.get(i);
+    		textParse += tempEntry.getDesc() + System.getProperty("line.separator")
+    				+ tempEntry.getPriority() + System.getProperty("line.separator")
+    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + System.getProperty("line.separator")
+    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + System.getProperty("line.separator")
+    				+ tempEntry.getStatus() + System.getProperty("line.separator")
+    				+ System.getProperty("line.separator");
+    	} 
+    	return textParse;
     }
     
     /**
