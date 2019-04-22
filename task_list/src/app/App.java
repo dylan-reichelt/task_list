@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import app.taskEntry;
 import app.taskList;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -107,6 +109,19 @@ public class App extends Application {
         {
         	filterBox.setValue("Filter By...");
         }
+        filterBox.valueProperty().addListener(new ChangeListener<String>() {
+
+			/*@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				// TODO Auto-generated method stub
+				
+			}*/
+        	
+        	@Override public void changed(ObservableValue val, String t, String t1) {
+        		taskTable.refreshList(task_text, filterBox.getValue());
+        	}
+        	
+        });
         
         //Add Task Button Settings
         Button addButton = null;
@@ -133,7 +148,7 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		entryPop tempWin = new entryPop();
-        		tempWin.entryWindow(stage, taskTable, task_text);
+        		tempWin.entryWindow(stage, taskTable, task_text, filterBox.getValue());
         	}
         });
         

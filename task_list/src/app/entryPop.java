@@ -37,7 +37,7 @@ class entryPop
 	 * @param stage
 	 * @void
 	 */
-	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list)
+	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list, String sortValue)
     {
     	//Creates the stage of the new window making it a module of the mainstage
     	Stage entryWin = new Stage();
@@ -105,6 +105,8 @@ class entryPop
         	@Override
         	public void handle(ActionEvent event)
         	{
+        		boolean valid = false;
+        		
         		try
         		{
         			prioNum = Integer.parseInt(prioText.getText());
@@ -124,16 +126,66 @@ class entryPop
         		{
         			tempTask.setDesc(descText.getText());
         			tempTask.setDue(dueDate.getValue());
+        			
+        			if(prioNum <= 0)
+        			{
+        				prioNum = 1;
+        			}
+        			
         			tempTask.setPriority(prioNum);
         			if(taskTable.addToList(tempTask))
         			{
-        				taskTable.refreshList(text_list);
+        				valid = true;
+        				taskTable.refreshList(text_list, sortValue);
         				entryWin.close();
         			}
         			else
         			{
         				System.out.println("NOT VALID");
         			}
+        		}
+        		
+        		if(valid == false)
+        		{
+        			//Creates A Popup Window if the entry is invalid
+    				Stage invalidWin = new Stage();
+    				invalidWin.initModality(Modality.WINDOW_MODAL);
+    		    	invalidWin.initOwner(entryWin);
+    		    	invalidWin.setTitle("Add Task Entry");
+    		    	invalidWin.setX(entryWin.getX() + 200);
+    		    	invalidWin.setY(entryWin.getY() + 200);
+    		    	invalidWin.setHeight(200);
+    		    	invalidWin.setWidth(400);
+    		    	
+    		    	//Label Text
+    		    	Label invalidText = new Label("This entry is invalid,\nPlease check entry and try again.");
+    		    	invalidText.setFont(Font.font("verdana",
+    		        		FontWeight.NORMAL,
+    		        		FontPosture.REGULAR, 20));
+    		    
+    		    	//Creates okay button
+    		    	Button okayButton = new Button("Okay");
+    		    	okayButton.setStyle("-fx-font-size:20");
+    		    	okayButton.setLayoutX(100);
+    		    	okayButton.setLayoutY(60);
+    		        okayButton.setPrefSize(100, 40);
+    		        
+    		        okayButton.setOnAction(new EventHandler<ActionEvent>() {
+    		        	@Override
+    		        	public void handle(ActionEvent event)
+    		        	{
+    		        		invalidWin.close();
+    		        	}
+    		        });
+    		        
+    		    	
+    		    	//Adds the invalidWin to the pane and shows it
+    		    	Pane tempLayout = new Pane();
+    		    	tempLayout.getChildren().add(invalidText);
+    		    	tempLayout.getChildren().add(okayButton);
+    		    	Scene tempScene = new Scene(tempLayout);
+    		    	invalidWin.setScene(tempScene);
+    		    	invalidWin.show();
         		}
         	}
         });

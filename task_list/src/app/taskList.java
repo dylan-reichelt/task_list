@@ -13,12 +13,109 @@ public class taskList {
 	/**
      * Prints out the tasks to the task_text box
      */
-    public void refreshList(ListView<String> task_text)
+    public void refreshList(ListView<String> task_text, String sortValue)
     {
+    	
+    	taskEntry[] sortedArray = new taskEntry[taskArray.size()];
+		int inserted;
+		
+		switch(sortValue)
+		{
+		case "Description":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getDesc().compareTo(sortedArray[sortedIndex].getDesc()) > 0)
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN DESCRIPTION");
+			break;
+		case "Due Date":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getDue().compareTo(sortedArray[sortedIndex].getDue()) > 0)
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN STATUS");
+			break;
+		case "Status":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getNumericalStatus() > (sortedArray[sortedIndex].getNumericalStatus()))
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN STATUS");
+			break;
+		default:
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getPriority() > (sortedArray[sortedIndex].getPriority()))
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN DEFAULT");
+			break;
+		}
+    	
+    	
     	task_text.getItems().clear();
-    	for(int i = 0; i < taskArray.size(); i++)
+    	for(int i = 0; i < sortedArray.length; i++)
     	{
-    		taskEntry tempEntry = taskArray.get(i);
+    		taskEntry tempEntry = sortedArray[i];
     		String input = tempEntry.getTaskPrint();
     		task_text.getItems().add(input);
     	} 
@@ -94,17 +191,14 @@ public class taskList {
     		taskEntry tempTask = taskArray.get(num);
     		if(tempTask.getDesc().equalsIgnoreCase(task.getDesc()))
     		{
-    			System.out.println("NOT VALID 1");
     			valid = false;
     	
     		}
     	}
     	if(task.getDesc() == null || task.getDue() == null)
 		{
-    		System.out.println("NOT VALID 2");
     		valid = false;
 		}
-    	System.out.println("VALID");
     	return valid;
     
     }
