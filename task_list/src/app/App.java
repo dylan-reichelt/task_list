@@ -182,7 +182,7 @@ public class App extends Application {
         			Alert alert = new Alert(AlertType.INFORMATION);
         			alert.setTitle("Error - Nothing to clear");
         			alert.setHeaderText(null);
-        			alert.setContentText("The current task list is empty. There is nothing to clear.");
+        			alert.setContentText("The current task list is empty. There are no tasks to clear.");
         			alert.showAndWait();
         		}
         		else {
@@ -218,17 +218,28 @@ public class App extends Application {
         	@Override
         	public void handle(ActionEvent event)
         	{
-        		Alert alert = new Alert(AlertType.CONFIRMATION);
-    			alert.setTitle("Confirmation");
-    			alert.setHeaderText(null);
-    			alert.setContentText("Are you sure you would like to save your current task list?");
-        		Optional<ButtonType> response = alert.showAndWait();
-        		if(response.get() == ButtonType.OK) {
-        			taskTable.saveList(taskTable);
+        		// Error message will appear if the list is empty
+        		if(taskTable.getSize() == 0) { 
+        			Alert alert = new Alert(AlertType.INFORMATION);
+        			alert.setTitle("Error - Task List is empty");
+        			alert.setHeaderText(null);
+        			alert.setContentText("The current task list is empty. There are no tasks to save.");
+        			alert.showAndWait();
         		}
-        		else {
-        			// Close the dialog
+        		else { // proceed if the list is not empty
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Confirmation");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Are you sure you would like to save your current task list?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK) {
+            			taskTable.saveList(taskTable); // saves the list to a text file
+            		}
+            		else {
+            			// Close the dialog
+            		}
         		}
+        		
         	}
         });
         
@@ -242,8 +253,22 @@ public class App extends Application {
         	@Override
         	public void handle(ActionEvent event)
         	{
-        		taskTable.loadList(taskTable);
-        		taskTable.refreshList(task_text);
+        		if(taskTable.getSize() > 0) {
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Confirmation");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Loading a list involves deleting all current tasks. "
+        					+ "Are you sure you would like to delete all tasks?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK) {
+            			taskTable.restartList(task_text);
+            		}
+            		else {
+            			// Close the dialog
+            		}
+        		}
+            	taskTable.loadList(taskTable);
+            	taskTable.refreshList(task_text);
         	}
         });
         
