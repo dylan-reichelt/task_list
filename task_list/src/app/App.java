@@ -1,8 +1,17 @@
 package app;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Optional;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 //import com.sun.javafx.binding.Logging;
 
@@ -12,7 +21,10 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -33,6 +45,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 public class App extends Application { 
 	
@@ -136,6 +149,8 @@ public class App extends Application {
         		tempWin.entryWindow(stage, taskTable, task_text);
         	}
         });
+        // deleted = -1
+        // completed = 0 
         
         //Restart Button
         Button restartButton = null;
@@ -158,7 +173,34 @@ public class App extends Application {
         restartButton.setLayoutX(750);
         restartButton.setLayoutY(20);
         restartButton.setPrefSize(175, 50);
-       
+        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event)
+        	{
+        		System.out.println("CURRENT TASK LIST SIZE: " + taskTable.getSize());
+        		if(taskTable.getSize() == 0){
+        			Alert alert = new Alert(AlertType.INFORMATION);
+        			alert.setTitle("Error - Nothing to clear");
+        			alert.setHeaderText(null);
+        			alert.setContentText("The current task list is empty. There are no tasks to clear.");
+        			alert.showAndWait();
+        		}
+        		else {
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Confirmation");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Are you sure you would like to delete all tasks?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK) {
+            			taskTable.restartList(task_text);
+            		}
+            		else {
+            			// Close the dialog
+            		}
+        		}
+        	}
+        });
+        
         //Print Button
         Button printButton = new Button ("Print");
         printButton.setStyle("-fx-font-size:20");
@@ -172,6 +214,34 @@ public class App extends Application {
         saveButton.setLayoutX(1125);
         saveButton.setLayoutY(20);
         saveButton.setPrefSize(150, 50);
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event)
+        	{
+        		// Error message will appear if the list is empty
+        		if(taskTable.getSize() == 0) { 
+        			Alert alert = new Alert(AlertType.INFORMATION);
+        			alert.setTitle("Error - Task List is empty");
+        			alert.setHeaderText(null);
+        			alert.setContentText("The current task list is empty. There are no tasks to save.");
+        			alert.showAndWait();
+        		}
+        		else { // proceed if the list is not empty
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Confirmation");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Are you sure you would like to save your current task list?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK) {
+            			taskTable.saveList(taskTable); // saves the list to a text file
+            		}
+            		else {
+            			// Close the dialog
+            		}
+        		}
+        		
+        	}
+        });
         
         //Load Button
         Button loadButton = new Button ("Load");
@@ -179,6 +249,28 @@ public class App extends Application {
         loadButton.setLayoutX(1300);
         loadButton.setLayoutY(20);
         loadButton.setPrefSize(150, 50);
+        loadButton.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override
+        	public void handle(ActionEvent event)
+        	{
+        		if(taskTable.getSize() > 0) {
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Confirmation");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Loading a list involves deleting all current tasks. "
+        					+ "Are you sure you would like to delete all tasks?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK) {
+            			taskTable.restartList(task_text);
+            		}
+            		else {
+            			// Close the dialog
+            		}
+        		}
+            	taskTable.loadList(taskTable);
+            	taskTable.refreshList(task_text);
+        	}
+        });
         
         //Adding the pane and the items to the pane
         Pane layout = new Pane();
