@@ -374,4 +374,37 @@ public class taskList {
     	return true; // if no flags are true, proceed
     	
     }
+    
+    /**
+     * Will return the array number of an item based off the priority -1 (which is the index in the actual array). This
+     * will allow for edit and other things to access a task when it's not in the priority order in the filter.
+     * the string must be in the format:
+     * 
+     *  Description: Hm
+	 *	Priority: 1
+	 *	Start Date: NA
+	 *	Due Date: 2019-04-27
+	 *	Status: Not Started
+     * 
+     * @param input
+     * @return int
+     */
+	public int stringToPriority(String input)
+	{
+		String lines[] = input.split("\\r?\\n");
+		String prioritySplit[] = lines[1].split(" ");
+		int priorityInt = Integer.parseInt(prioritySplit[1]);
+		return priorityInt;
+	}
+	
+    /**
+     * Returns a taskEntry in the taskArray to allow something to grab it
+     * 
+     * @param arrayNum
+     * @return taskEntry
+     */
+    public taskEntry getTask(int arrayNum)
+    {
+    	return taskArray.get(arrayNum);
+    }
 }
