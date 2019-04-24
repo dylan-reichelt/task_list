@@ -121,13 +121,20 @@ public class taskList {
      */
     public String parseList() {
     	String textParse = "";
-    	for(int i = 0; i < taskArray.size(); i++)
+    	for(int listIndex = 0; listIndex < taskArray.size(); listIndex++)
     	{
     		// Writes the following string into the text file
-    		taskEntry tempEntry = taskArray.get(i);
+    		taskEntry tempEntry = taskArray.get(listIndex);
+    		String startDate;
+    		if(tempEntry.getStart() != null) {
+    			startDate = tempEntry.getStart().format(DateTimeFormatter.ofPattern("dd LLLL yyyy"));
+    		}
+    		else {
+    			startDate = "not set";
+    		}
     		textParse += tempEntry.getDesc() + ", "
     				+ tempEntry.getPriority() + ", "
-    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + ", "
+    				+ startDate + ", "
     				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + ", "
     				+ tempEntry.getStatus() + ", "
     				+ System.getProperty("line.separator");
@@ -168,69 +175,77 @@ public class taskList {
      */
     public void loadList(taskList taskTable) {
     	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>();
-		JFileChooser chooser = new JFileChooser();
+		JFileChooser chooser = new JFileChooser(); // allows user selection of documents
 		chooser.setCurrentDirectory(new File(System.getProperty("user.home") // setting default directory to downloads folder
 				+ System.getProperty("file.separator") + "Downloads"));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt"); // apply text file filter
-		chooser.setFileFilter(filter);
+		chooser.setFileFilter(filter); 
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You opened " + chooser.getSelectedFile().getName());
 			String filename = chooser.getSelectedFile().getName();
 			String path = chooser.getSelectedFile().getPath();
 			try {
-    			File file = new File(path);
-    			if(verifyParse(file) == true) {
-    				BufferedReader br = new BufferedReader(new FileReader(file)); 
+    			File listFile = new File(path);
+    			if(verifyParse(listFile) == true) { // continue if the text file is valid
+    				BufferedReader br = new BufferedReader(new FileReader(listFile)); 
             		String read; 
             		try {
             			while ((read = br.readLine()) != null && !(read.equals(""))) {
             				System.out.println("PARSING...");
-            				String [] parse = read.split(", ");
+            				String [] parsedLine = read.split(", "); // split line into an array using , as a delimiter
             				
-            				String description = parse[0];
+            				String description = parsedLine[0];
             				System.out.println("description = " + description);
             				
-            				int priority = Integer.parseInt(parse[1]);
+            				int priority = Integer.parseInt(parsedLine[1]);
             				System.out.println("priority = " + priority);
             				
+            				LocalDate startDate;
             				DateTimeFormatter format = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-            				LocalDate startDate = LocalDate.parse(parse[2], format);
+            				if(parsedLine[2].equals("not set")) { // set start date to null if it has not been assigned
+            					startDate = null;
+            				}else { // assign start date if it is assigned
+            					startDate = LocalDate.parse(parsedLine[2], format);
+            				}
+
             				System.out.println("start date = " + startDate);
             				
-            				LocalDate endDate = LocalDate.parse(parse[3], format);
+            				LocalDate endDate = LocalDate.parse(parsedLine[3], format);
             				System.out.println("end date = " + endDate);
             				
             				int status = 0;
-            				if(parse[4].equals("Not Started")) {
+            				// Chooses which status to assign to the taskLoad object
+            				if(parsedLine[4].equals("Not Started")) {
             					status = 0;
             				}
-            				else if(parse[4].equals("In Progress")) {
+            				else if(parsedLine[4].equals("In Progress")) {
             					status = 1;
             				}
-            				else if(parse[4].equals("Complete")) {
+            				else if(parsedLine[4].equals("Complete")) {
             					status = 2;
             				}
-            				else if(parse[4].equals("Deleted")) {
+            				else if(parsedLine[4].equals("Deleted")) {
             					status = 3;
             				}
             				System.out.println("status = " + status);
             				
+            				// Creates new taskEntry object with obtained variables
             				taskEntry taskLoad = new taskEntry();
             				taskLoad.setDesc(description);
             				taskLoad.setPriority(priority);
             				taskLoad.setStart(startDate);
-            				taskLoad.setDue(startDate);
+            				taskLoad.setDue(endDate);
             				taskLoad.setStatus(status);
             				
-            				taskTable.addToList(taskLoad);
+            				taskTable.addToList(taskLoad); // adds task to the list
             				
             			}
-            		}catch(IOException e) {
+            		}catch(IOException exception) {
         			
         		}
     		}
-    		}catch(FileNotFoundException e) {
+    		}catch(FileNotFoundException exception) {
     			
     		}
 		}
@@ -256,6 +271,7 @@ public class taskList {
     	
     		}
     	}
+    	System.out.println(task.getDue());
     	if(task.getDesc() == null || task.getDue() == null)
 		{
     		System.out.println("NOT VALID 2");
@@ -271,23 +287,25 @@ public class taskList {
      * can be parsed into objects for the taskList.
      * 
      * @param file this file variable will be passed to check its parsing viability
-     * @return boolean this boolean value will return true if the file is valid to parse, false if invalid.
+     * @return valid this boolean value will return true if the file is valid to parse, false if invalid.
      */
     private boolean verifyParse(File file) {
+    	// flags to indicate invalid text file
     	boolean invalidLength = false;
     	boolean invalidPriority = false;
     	boolean invalidStartDate = false;
     	boolean invalidDueDate = false;
     	boolean invalidStatus = false;
+    	boolean validFile = true;
     	
     	try {
     		BufferedReader parseReader = new BufferedReader(new FileReader(file));
-    		System.out.println(file.getName());
-    		String read;
+    		String read; // string that will hold current string being read from the file
     		try {
     			if(parseReader.readLine() != null) {
         			while ((read = parseReader.readLine()) != null && !(read.equals(""))) {
         				String [] parsedLine = read.split(", ");
+        				// DESCRIPTION
         				if(parsedLine.length == 5) {
             				if(parsedLine[0] == null) { // shows empty text file
             					invalidLength = true;
@@ -296,51 +314,59 @@ public class taskList {
             					System.out.println("The file is not empty.");
             				}
             				
-            				if(parsedLine[1].length() > 0) { // checks if the second string can be parsed into an int
+            				// PRIORITY NUMBER
+            				if(parsedLine[1].length() > 0) { // checks if the priority number is not empty
             					try {
-            						Integer.parseInt(parsedLine[1]);
+            						Integer.parseInt(parsedLine[1]); // checks if the second string can be parsed into an int
             					}
             					catch(NumberFormatException error) {
-            						invalidPriority = true; // turns true if the number is false
+            						invalidPriority = true; // turns true if the number cannot be parsed
             						System.out.println("Invalid priority number.");
             					}
-            				}else {
+            				}else { // catches error if there is no priority
             					invalidPriority = true;
             				}
             				
+            				// STARTDATE
             				DateTimeFormatter format = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-            				if(parsedLine[2].length() > 0) { // checks if third string can be parsed into a LocalDate
-            					try {
-            						LocalDate.parse(parsedLine[2], format);
-            					}
-            					catch(DateTimeParseException error) {
-            						invalidStartDate = true; // true if the string can't be parsed
-            						System.out.println("Invalid start date.");
+            				if(parsedLine[2].length() > 0) { // checks if the start date is not empty
+            					if(parsedLine[2].equals("not set")) {
+            						// Proceed if the task does not have a start date
+            					}else {
+            						try {
+                						LocalDate.parse(parsedLine[2], format); // checks if third string can be parsed into a LocalDate
+                					}
+                					catch(DateTimeParseException error) {
+                						invalidStartDate = true; // true if the string can't be parsed into a local date
+                						System.out.println("Invalid start date.");
+                					}
             					}
             				}else {
-            					invalidStartDate = true;
+            					invalidStartDate = true; // flags true if the start date is empty
             				}
             				
-            				if(parsedLine[3].length() > 0) { // checks if third string can be parsed into a LocalDate
+            				// ENDDATE
+            				if(parsedLine[3].length() > 0) { // checks if the due date is not empty
             					try {
-            						LocalDate.parse(parsedLine[3], format);
+            						LocalDate.parse(parsedLine[3], format); // checks if third string can be parsed into a LocalDate
             					}
             					catch(DateTimeParseException error) {
             						invalidDueDate = true; // true if the string can't be parsed
             						System.out.println("Invalid due date.");
             					}
             				}else {
-            					invalidDueDate = true;
+            					invalidDueDate = true; // flags true if the end date is empty
             				}
             				
+            				// STATUS
             				if(parsedLine[4].length() > 0) { // checks if fourth string is a valid status
             					if( (parsedLine[4].equals("Not Started")) == false && (parsedLine[4].equals("In Progress") == false) 
-            							&& (parsedLine[4].equals("Complete")) == false && (parsedLine[4].equals("Deleted") == false)) {
+            							&& (parsedLine[4].equals("Complete")) == false && (parsedLine[4].equals("Deleted") == false)) { // checks if fourth string is a valid status
             						invalidStatus = true; // true if the status is not one of these strings
             						System.out.println("Invalid status.");
             					}
             				}else {
-            					invalidStatus = true; 
+            					invalidStatus = true;  // flags true if the status is empty
             				}
         				}
         				else {
@@ -358,7 +384,7 @@ public class taskList {
     		}catch(IOException exception) {
     			
     		}
-    	}catch(FileNotFoundException e) {
+    	}catch(FileNotFoundException exception) {
     		
     	}
     	
@@ -372,9 +398,11 @@ public class taskList {
 			alert.setHeaderText(null);
 			alert.setContentText("Invalid text file. Please load the file initially saved as tasklist.txt.");
 			alert.showAndWait();
-    		return false;
+    		validFile = false;
+    	}else {
+    		validFile = true;
     	}
-    	return true; // if no flags are true, proceed
+    	return validFile; // if no flags are true, proceed
     	
     }
 }

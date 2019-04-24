@@ -253,18 +253,18 @@ public class App extends Application {
         	@Override
         	public void handle(ActionEvent event)
         	{
-        		if(taskTable.getSize() > 0) {
+        		if(taskTable.getSize() > 0) { // verify with user that all current tasks will be deleted
         			Alert alert = new Alert(AlertType.CONFIRMATION);
         			alert.setTitle("Confirmation");
         			alert.setHeaderText(null);
         			alert.setContentText("Loading a list involves deleting all current tasks. "
         					+ "Are you sure you would like to delete all tasks?");
             		Optional<ButtonType> response = alert.showAndWait();
-            		if(response.get() == ButtonType.OK) {
+            		if(response.get() == ButtonType.OK) { // clear list if "OK" is selected
             			taskTable.restartList(task_text);
             		}
             		else {
-            			// Close the dialog
+            			// Close the dialog if cancel is chosen
             		}
         		}
             	taskTable.loadList(taskTable);
