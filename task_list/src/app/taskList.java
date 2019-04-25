@@ -531,9 +531,10 @@ public class taskList {
      */
 	public int stringToPriority(String input)
 	{
-		String lines[] = input.split("\\r?\\n");
-		String prioritySplit[] = lines[1].split(" ");
-		int priorityInt = Integer.parseInt(prioritySplit[1]);
+		String lines[] = input.split("Priority: ");
+		System.out.println(lines[1]);
+		String prioritySplit[] = lines[1].split("\n");
+		int priorityInt = Integer.parseInt(prioritySplit[0]);
 		return priorityInt;
 	}
 	
