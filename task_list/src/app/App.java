@@ -119,9 +119,6 @@ public class App extends Application {
       	
       });
       
-		// Autoloading tasks from text file if file exists
-		taskTable.autoLoadTasks(taskTable);
-		taskTable.refreshList(task_text, filterBox.getValue());
         
         task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
         	@Override
