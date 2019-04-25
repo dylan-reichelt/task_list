@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 //import com.sun.javafx.binding.Logging;
 
@@ -88,19 +90,6 @@ public class App extends Application {
         task_text.setLayoutY(95);
         task_text.setEditable(false);
         task_text.setStyle("-fx-font-size:20");
-        task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
-        	@Override
-        	public void handle(MouseEvent click) {
-        		if(click.getClickCount() == 2)
-        		{
-        			String selectedString = task_text.getSelectionModel().getSelectedItem();
-        			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
-        			taskEntry tempTask = taskTable.getTask(priorityNum);
-        			System.out.println(tempTask.getTaskPrint());
-        		}
-        	}
-        });
-        
         
         //Making the drop down for filtering
         ObservableList<String> filter = 
@@ -122,6 +111,127 @@ public class App extends Application {
         {
         	filterBox.setValue("Filter By...");
         }
+      filterBox.valueProperty().addListener(new ChangeListener<String>() {
+
+      	@Override public void changed(ObservableValue val, String t, String t1) {
+      		taskTable.refreshList(task_text, filterBox.getValue());
+      	}
+      	
+      });
+      
+        
+        task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
+        	@Override
+        	public void handle(MouseEvent click) {
+        		if(click.getClickCount() == 2)
+        		{
+        			System.out.println("JACKSONS a fucking genius");
+        			
+        			String selectedString = task_text.getSelectionModel().getSelectedItem();
+        			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
+        			taskEntry tempTask = taskTable.getTask(priorityNum);
+        			
+        	    	Stage editWindow = new Stage();
+        	    	editWindow.initModality(Modality.WINDOW_MODAL);
+        	    	editWindow.initOwner(stage);
+        	    	editWindow.setTitle("Add Task Entry");
+        	    	editWindow.setX(stage.getX() + 100);
+        	    	editWindow.setY(stage.getY() + 100);
+        	    	editWindow.setHeight(300);
+        	    	editWindow.setWidth(650);
+        	    	
+        	        Button editButton = new Button ("Edit Task");
+        	        editButton.setStyle("-fx-font-size:20");
+        	        editButton.setLayoutX(50);
+        	        editButton.setLayoutY(190);
+        	        editButton.setPrefSize(150, 40);
+        	        
+        	        Button deleteButton = new Button ("Delete Task");
+        	        deleteButton.setStyle("-fx-font-size:20");
+        	        deleteButton.setLayoutX(250);
+        	        deleteButton.setLayoutY(190);
+        	        deleteButton.setPrefSize(150, 40);
+        	        
+        	        deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+        	        	@Override
+        	        	public void handle(ActionEvent event)
+        	        	{
+                			Alert alert = new Alert(AlertType.CONFIRMATION);
+                			alert.setTitle("Delete");
+                			alert.setHeaderText(null);
+                			alert.setContentText("Are you sure you would like to delete this task?");
+                    		Optional<ButtonType> response = alert.showAndWait();
+                    		if(response.get() == ButtonType.OK)
+                    		{
+                    			String selectedString = task_text.getSelectionModel().getSelectedItem();
+                    			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
+                    			taskEntry tempTask = taskTable.getTask(priorityNum);
+                    			System.out.println(tempTask.getTaskPrint());
+                    			System.out.println(priorityNum);
+                    			taskTable.deleteTask(priorityNum);
+                    			taskTable.refreshList(task_text, filterBox.getValue());
+                    			editWindow.close();
+                    		}
+                    		else {
+                    			// Close the dialog
+                    		}
+        	        	}
+        	        });
+        	        
+        	        Button cancelButton = new Button ("Cancel");
+        	        cancelButton.setStyle("-fx-font-size:20");
+        	        cancelButton.setLayoutX(450);
+        	        cancelButton.setLayoutY(190);
+        	        cancelButton.setPrefSize(150, 40);
+        	        
+        	        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+        	        	@Override
+        	        	public void handle(ActionEvent event)
+        	        	{
+        	        		editWindow.close();
+        	        	}
+        	        });
+        	        
+        	        TextArea task = new TextArea(tempTask.getTaskPrint());
+        	        task.setStyle("-fx-font-size:20");
+        	        task.setLayoutX(0);
+        	        task.setLayoutY(0);
+        	        task.setPrefSize(650, 170);
+        	    	
+        	    	Pane layout = new Pane();
+        	    	layout.getChildren().add(cancelButton);
+        	    	layout.getChildren().add(deleteButton);
+        	    	layout.getChildren().add(editButton);
+        	    	layout.getChildren().add(task);
+        	    	Scene entryScene = new Scene(layout);
+        	    	editWindow.setScene(entryScene);
+        	    	editWindow.showAndWait();
+        			
+        		}
+        		else if(click.getClickCount() == 9)
+        		{
+        			Alert alert = new Alert(AlertType.CONFIRMATION);
+        			alert.setTitle("Delete");
+        			alert.setHeaderText(null);
+        			alert.setContentText("Are you sure you would like to delete this task?");
+            		Optional<ButtonType> response = alert.showAndWait();
+            		if(response.get() == ButtonType.OK)
+            		{
+            			String selectedString = task_text.getSelectionModel().getSelectedItem();
+            			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
+            			taskEntry tempTask = taskTable.getTask(priorityNum);
+            			System.out.println(tempTask.getTaskPrint());
+            			System.out.println(priorityNum);
+            			taskTable.deleteTask(priorityNum);
+            			taskTable.refreshList(task_text, filterBox.getValue());
+            		}
+            		else {
+            			// Close the dialog
+            		}
+        		}
+        	}
+        });
+        
         
         //Add Task Button Settings
         Button addButton = null;
@@ -148,7 +258,7 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		entryPop tempWin = new entryPop();
-        		tempWin.entryWindow(stage, taskTable, task_text);
+        		tempWin.entryWindow(stage, taskTable, task_text, filterBox.getValue());
         	}
         });
         // deleted = -1
@@ -270,7 +380,7 @@ public class App extends Application {
             		}
         		}
             	taskTable.loadList(taskTable);
-            	taskTable.refreshList(task_text);
+            	taskTable.refreshList(task_text, filterBox.getValue());
         	}
         });
         

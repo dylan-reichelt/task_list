@@ -37,7 +37,7 @@ class entryPop
 	 * @param stage
 	 * @void
 	 */
-	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list)
+	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list, String sortValue)
     {
     	//Creates the stage of the new window making it a module of the mainstage
     	Stage entryWin = new Stage();
@@ -136,7 +136,7 @@ class entryPop
         			if(taskTable.addToList(tempTask))
         			{
         				valid = true;
-        				taskTable.refreshList(text_list);
+        				taskTable.refreshList(text_list, sortValue);
         				entryWin.close();
         			}
         			else

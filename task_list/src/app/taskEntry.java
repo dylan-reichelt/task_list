@@ -76,6 +76,11 @@ public class taskEntry {
 		return "Not Started";
 	}
 	
+	public int getNumericalStatus()
+	{
+		return status;
+	}
+	
 	public String getTaskPrint()
 	{
 		String tempString = "Description: " + getDesc() + "\n" +
