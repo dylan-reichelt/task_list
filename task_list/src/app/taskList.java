@@ -1,3 +1,10 @@
+/**
+ * Authors: Ignatius Akeeh, Kyle Gonzalez, Jackson Lewis, Dylan Reichelt
+ * Team Project
+ * taskList.java
+ * This class manages a list of of task entries
+ */
+
 package app;
 
 import java.io.BufferedReader;
@@ -22,13 +29,21 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.util.Callback;
 
 public class taskList {
-	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>(); // List for the tasks
+	// CLASS VARIABLES
+	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>();
 	ArrayList<taskEntry> deletedTasks = new ArrayList<taskEntry>();
 	
-	public void deleteTask(int index) {
-		for(int i = index; i < taskArray.size() - 1; i++) {
-			taskArray.set(i, taskArray.get(i + 1));
-			taskArray.get(i).setPriority(i + 1);
+	/**
+	 * Deletes the task at deletedIndex
+	 * @param deletedIndex is index of task to be deleted
+	 */
+	public void deleteTask(int deletedIndex)
+	{
+		//Keeping elements sorted by priority
+		for(int index = deletedIndex; index < taskArray.size() - 1; index++)
+		{
+			taskArray.set(index, taskArray.get(index + 1));
+			taskArray.get(index).setPriority(index + 1);
 		}
 		
 		deletedTasks.add(taskArray.get(taskArray.size() - 1));
@@ -37,43 +52,55 @@ public class taskList {
 	}
 	
 	/**
-	 * Remove function for editing
-	 * @param index
+	 * Removes entry at removeIndex without adding it to deleted array (Used
+	 * for editing only)
+	 * @param removeIndex is index of task that is being edited
 	 */
-	public void removeTask(int index)
+	public void removeTask(int removeIndex)
 	{
-		for(int i = index; i < taskArray.size() - 1; i++) {
-			taskArray.set(i, taskArray.get(i + 1));
-			taskArray.get(i).setPriority(i + 1);
+		for(int index = removeIndex; index < taskArray.size() - 1; index++)
+		{
+			taskArray.set(index, taskArray.get(index + 1));
+			taskArray.get(index).setPriority(index + 1);
 		}
 		
 		taskArray.remove(taskArray.size() - 1);
 	}
 	
 	/**
-     * Prints out the tasks to the task_text box
-     */
-  public void refreshList(ListView<String> task_text, String sortValue)
-  {
-  	
-  	taskEntry[] sortedArray = new taskEntry[taskArray.size()];
+	 * Outputs taskList tasks to task_text. They are sorted based on current
+	 * sort value
+	 * @param task_text list of tasks used in GUI
+	 * @param sortValue current value on sort drop down
+	 */
+	public void refreshList(ListView<String> task_text, String sortValue)
+	{
+		taskEntry[] sortedArray = new taskEntry[taskArray.size()];
 		int inserted;
 		
 		switch(sortValue)
 		{
 		case "Description":
+			//Sort by description
+			
 			if(taskArray.size() != 0)
+			{
 				sortedArray[0] = taskArray.get(0);
+			}
 			inserted = 1;
+			
 			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
 			{
 				int sortedIndex = 0;
-				while(sortedIndex < inserted && taskArray.get(taskIndex).getDesc().compareTo(sortedArray[sortedIndex].getDesc()) > 0)
+				while(sortedIndex < inserted && taskArray.get(taskIndex)
+						.getDesc().compareTo(sortedArray[sortedIndex]
+								.getDesc()) > 0)
 				{
 					sortedIndex++;
 				}
 				
-				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				for(int insertIndex = inserted; insertIndex > sortedIndex;
+						insertIndex--)
 				{
 					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
 				}
@@ -81,21 +108,29 @@ public class taskList {
 				sortedArray[sortedIndex] = taskArray.get(taskIndex);
 				inserted++;
 			}
-			System.out.println("RAN DESCRIPTION");
+			
 			break;
 		case "Due Date":
+			//Sort by Due Date
+			
 			if(taskArray.size() != 0)
+			{
 				sortedArray[0] = taskArray.get(0);
+			}
 			inserted = 1;
+			
 			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
 			{
 				int sortedIndex = 0;
-				while(sortedIndex < inserted && taskArray.get(taskIndex).getDue().compareTo(sortedArray[sortedIndex].getDue()) > 0)
+				while(sortedIndex < inserted && taskArray.get(taskIndex)
+						.getDue().compareTo(sortedArray[sortedIndex].getDue())
+						> 0)
 				{
 					sortedIndex++;
 				}
 				
-				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				for(int insertIndex = inserted; insertIndex > sortedIndex;
+						insertIndex--)
 				{
 					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
 				}
@@ -103,21 +138,29 @@ public class taskList {
 				sortedArray[sortedIndex] = taskArray.get(taskIndex);
 				inserted++;
 			}
-			System.out.println("RAN STATUS");
+			
 			break;
 		case "Status":
+			//Sort by Status
+			
 			if(taskArray.size() != 0)
+			{
 				sortedArray[0] = taskArray.get(0);
+			}
 			inserted = 1;
+			
 			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
 			{
 				int sortedIndex = 0;
-				while(sortedIndex < inserted && taskArray.get(taskIndex).getNumericalStatus() > (sortedArray[sortedIndex].getNumericalStatus()))
+				while(sortedIndex < inserted && taskArray.get(taskIndex)
+						.getNumericalStatus() > (sortedArray[sortedIndex]
+								.getNumericalStatus()))
 				{
 					sortedIndex++;
 				}
 				
-				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				for(int insertIndex = inserted; insertIndex > sortedIndex;
+						insertIndex--)
 				{
 					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
 				}
@@ -125,21 +168,29 @@ public class taskList {
 				sortedArray[sortedIndex] = taskArray.get(taskIndex);
 				inserted++;
 			}
-			System.out.println("RAN STATUS");
+
 			break;
 		default:
+			//Sort by Priority by default
+			
 			if(taskArray.size() != 0)
+			{
 				sortedArray[0] = taskArray.get(0);
+			}
 			inserted = 1;
+			
 			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
 			{
 				int sortedIndex = 0;
-				while(sortedIndex < inserted && taskArray.get(taskIndex).getPriority() > (sortedArray[sortedIndex].getPriority()))
+				while(sortedIndex < inserted && taskArray.get(taskIndex)
+						.getPriority() > (sortedArray[sortedIndex]
+								.getPriority()))
 				{
 					sortedIndex++;
 				}
 				
-				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				for(int insertIndex = inserted; insertIndex > sortedIndex;
+						insertIndex--)
 				{
 					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
 				}
@@ -147,30 +198,33 @@ public class taskList {
 				sortedArray[sortedIndex] = taskArray.get(taskIndex);
 				inserted++;
 			}
-			System.out.println("RAN DEFAULT");
+			
 			break;
 		}
   	
-  	
-  	task_text.getItems().clear();
-  	for(int i = 0; i < sortedArray.length; i++)
-  	{
-  		taskEntry tempEntry = sortedArray[i];
-  		String input = tempEntry.getTaskPrint();
-  		task_text.getItems().add(input);
-  	} 
+		//Add items from sorted array to task_text
+	  	task_text.getItems().clear();
+	  	for(int index = 0; index < sortedArray.length; index++)
+	  	{
+	  		taskEntry tempEntry = sortedArray[index];
+	  		String input = tempEntry.getTaskPrint();
+	  		task_text.getItems().add(input);
+	  	} 
   }
     
     /**
-     * Adds a task to the list taskArray. If it is added returns true. If it is not a valid task then it returns false and won't add it
-     * to the list. This adds to the list according to priority.
+     * Adds a task to the list taskArray. If it is added returns true. If it is
+     *  not a valid task then it returns false and won't add it to the list.
+     *  This adds to the list according to priority.
      * 
-     * @param task
+     * @param task is task to be added
      * @return boolean
      */
     public boolean addToList(taskEntry task)
     {
-    	if(task.getNumericalStatus() == 2) {
+    	//If task is Completed
+    	if(task.getNumericalStatus() == 2)
+    	{
     		deletedTasks.add(task);
     		return true;
     	}
@@ -178,8 +232,12 @@ public class taskList {
     	int location = 0;
     	boolean priorityHit = false;
     	
+    	//Set negative or zero priorities to 1
     	if(task.getPriority() < 1)
+    	{
     		task.setPriority(1);
+    	}
+    	
     	
     	if(isValid(task))
     	{
@@ -196,7 +254,6 @@ public class taskList {
     				taskEntry tempTask = taskArray.get(tempNum);
     				if(task.getPriority() == tempTask.getPriority())
     				{
-    					System.out.println("PRIORITY HIT");
     					priorityHit = true;
     					location = tempNum;
     				}
@@ -207,7 +264,8 @@ public class taskList {
     				task.setPriority(taskArray.size());
     				taskArray.add(location, task);
     			
-    				for(int tempNum = location; tempNum < taskArray.size(); tempNum ++)
+    				for(int tempNum = location; tempNum < taskArray.size();
+    						tempNum ++)
     				{
     					taskArray.get(tempNum).setPriority(tempNum + 1);
     				}
@@ -224,42 +282,52 @@ public class taskList {
     }
     
     /**
-     * Clears the ListView of all the entries in the array list. Clears the array list itself and the ListView.
+     * Clears the ListView of all the entries in the array list. Clears the
+     * array list itself and the ListView.
      * 
-     * @param task_text A ListView will be passed in order to clear the ListView's taskEntries
+     * @param task_text A ListView will be passed in order to clear the
+     * ListView's taskEntries
      */
-    public void restartList(ListView<String> task_text) {
+    public void restartList(ListView<String> task_text)
+    {
     	task_text.getItems().clear();
     	taskArray.clear();
     }
     
     /**
-     * Adds a task to the list taskArray. If it is added returns true. If it is not a valid task then it returns false and won't add it
-     * to the list. This adds to the list according to priority.
+     * Adds a task to the list taskArray. If it is added returns true. If it is
+     * not a valid task then it returns false and won't add it to the list.
+     * This adds to the list according to priority.
      * 
-     * @return taskArray.size() Gives the number of taskEntries in the taskArray array list
+     * @return taskArray.size() Gives the number of taskEntries in the
+     * taskArray array list
      */
-    public int getSize() {
+    public int getSize()
+    {
     	return taskArray.size();
     }
     
     /**
-     * Parses the current entries in the array list to a String format. The format it is written
-     * in is description, priority number, start date, due date, and status.
+     * Parses the current entries in the array list to a String format. The
+     * format it is written in is description, priority number, start date, due
+     * date, and status.
      * 
-     * @return textParse returns a String that will be written to a text file in order to be parsed into
-     * 		   the task list at a later point in time	
+     * @return textParse returns a String that will be written to a text file
+     * in order to be parsed into the task list at a later point in time	
      */
-    public String parseList() {
+    public String parseList()
+    {
     	String textParse = "";
-    	for(int i = 0; i < taskArray.size(); i++)
+    	for(int index = 0; index < taskArray.size(); index++)
     	{
     		// Writes the following string into the text file
-    		taskEntry tempEntry = taskArray.get(i);
+    		taskEntry tempEntry = taskArray.get(index);
     		textParse += tempEntry.getDesc() + ", "
     				+ tempEntry.getPriority() + ", "
-    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + ", "
-    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + ", "
+    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern(
+    						"dd LLLL yyyy")) + ", "
+    				+ tempEntry.getDue().format(DateTimeFormatter.ofPattern(
+    						"dd LLLL yyyy")) + ", "
     				+ tempEntry.getStatus() + ", "
     				+ System.getProperty("line.separator");
     	} 
@@ -267,21 +335,25 @@ public class taskList {
     }
     
     /**
-     * Saves the taskList's entries to a new text file called "TaskList.txt". The entries are parsed 
-     * into a certain format to load later. The file "TaskList.txt" will be saved to the user's 
-     * Downloads directory.
+     * Saves the taskList's entries to a new text file called "TaskList.txt".
+     * The entries are parsed into a certain format to load later. The file
+     * "TaskList.txt" will be saved to the user's Downloads directory.
      * 
-     * @param taskTable passes the list of tasks to parse and write current entries to a text file	
+     * @param taskTable passes the list of tasks to parse and write current
+     * entries to a text file	
      */
-    public void saveList(taskList taskTable) {
+    public void saveList(taskList taskTable)
+    {
     	try {
     		String home = System.getProperty("user.home");
     		String fileName = "tasklist";
+    		
     		// Saves text file to Downloads directory
     		File file = new File(home + "/Downloads/" + fileName + ".txt");
         	PrintWriter pw = new PrintWriter(file);
         	pw.println(taskTable.parseList());
-        	System.out.println(fileName + ".txt" + "saved at " + home + "/Downloads/" + fileName + ".txt!");
+        	System.out.println(fileName + ".txt" + "saved at " + home + 
+        			"/Downloads/" + fileName + ".txt!");
         	pw.close();
         } catch (FileNotFoundException e){
         	e.printStackTrace();
@@ -289,13 +361,14 @@ public class taskList {
     }
    
     /**
-     * Parses the selected file into entries that will be added to the task list. The ListView's 
-     * contents will be updated to display the loaded entries. If a valid file is not chosen, an
-     * error message will be displayed.
+     * Parses the selected file into entries that will be added to the task
+     * list. The ListView's contents will be updated to display the loaded
+     * entries. If a valid file is not chosen, an error message will be
+     * displayed.
      * 
      * @param 
-     * @return textParse returns a String that will be written to a text file in order to be parsed into
-     * 		   the task list at a later point in time	
+     * @return textParse returns a String that will be written to a text file
+     * in order to be parsed into the task list at a later point in time	
      */
     public void loadList(taskList taskTable) {
     	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>();
