@@ -127,12 +127,12 @@ public class App extends Application {
         		{
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
         			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
-        			taskEntry tempTask = taskTable.getTask(priorityNum);
+        			taskEntry oldTask = taskTable.getTask(priorityNum);
         			
         	    	Stage editWindow = new Stage();
         	    	editWindow.initModality(Modality.WINDOW_MODAL);
         	    	editWindow.initOwner(stage);
-        	    	editWindow.setTitle("Add Task Entry");
+        	    	editWindow.setTitle("Edit or Delete Task");
         	    	editWindow.setX(stage.getX() + 100);
         	    	editWindow.setY(stage.getY() + 100);
         	    	editWindow.setHeight(300);
@@ -148,6 +148,232 @@ public class App extends Application {
         	        	@Override
         	        	public void handle(ActionEvent event)
         	        	{
+        	        		
+        	        		Stage edit = new Stage();
+                	    	edit.initModality(Modality.WINDOW_MODAL);
+                	    	edit.initOwner(stage);
+                	    	edit.setTitle("Edit Task Entry");
+                	    	edit.setX(stage.getX() + 100);
+                	    	edit.setY(stage.getY() + 100);
+                	    	edit.setHeight(450);
+                	    	edit.setWidth(800);
+                	    	
+                	    	Label descLabel = new Label("New Description");
+                	    	descLabel.setFont(Font.font("verdana",
+                					FontWeight.BOLD,
+                					FontPosture.REGULAR, 20));
+                	    	descLabel.setLayoutX(15);
+                	        descLabel.setLayoutY(20);
+                	        
+                	        TextArea descText = new TextArea(oldTask.getDesc());
+                	        descText.setPrefSize(470, 200);
+                	        descText.setLayoutX(15);
+                	        descText.setLayoutY(50);
+                	        descText.setFont(Font.font("verdana",
+                	        		FontWeight.NORMAL,
+                	        		FontPosture.REGULAR,
+                	        		18));
+                	        
+                	        Label startDateLabel = new Label("Start Date:");
+                	        startDateLabel.setFont(Font.font("verdana",
+                	        		FontWeight.NORMAL,
+                	        		FontPosture.REGULAR, 20));
+                	        DatePicker startEndDate = new DatePicker();
+                	        startDateLabel.setLayoutX(500);
+                	        startDateLabel.setLayoutY(150);
+                	        startEndDate.setLayoutX(500);
+                	        startEndDate.setLayoutY(180);
+                	        startEndDate.setEditable(false);
+                	        startEndDate.setMaxSize(200, 75);
+                	        startEndDate.setStyle("-fx-font-size:20");
+                	        startDateLabel.setVisible(false);
+                	        startEndDate.setVisible(false);
+                	        
+                	        ObservableList<String> status = 
+                	            	FXCollections.observableArrayList(
+                	            			"Not Started",
+                	            			"In Progress",
+                	            			"Complete");
+                	            
+                	            
+                	        final ComboBox<String> statusBox = new ComboBox<String>(status);
+                	        statusBox.setPrefSize(250, 50);
+                	        statusBox.setLayoutX(500);
+                	        statusBox.setLayoutY(50);
+                	        statusBox.setStyle("-fx-font-size:20");
+                	        statusBox.setValue(oldTask.getStatus());
+                	        
+                	        statusBox.valueProperty().addListener(new ChangeListener<String>() {
+
+                	          	@Override public void changed(ObservableValue val, String t, String t1) {
+                	          		if(statusBox.getValue().equals("In Progress") && oldTask.getStatus().equals("Not Started")) {
+                	          			startDateLabel.setText("Start Date");
+                	          			startDateLabel.setVisible(true);
+                	          			startEndDate.setVisible(true);
+                	          		}
+                	          		else if(statusBox.getValue().equals("Complete")) {
+                	          			startDateLabel.setText("Complete Date");
+                	          			startDateLabel.setVisible(true);
+                	          			startEndDate.setVisible(true);
+                	          		}
+                	          	}
+                	          	
+                	          });
+                	        
+                	        //Create the datePicker for dueDate and Label
+                	        Label dateLabel = new Label("Due Date:");
+                	        dateLabel.setFont(Font.font("verdana",
+                	        		FontWeight.NORMAL,
+                	        		FontPosture.REGULAR, 20));
+                	        DatePicker dueDate = new DatePicker();
+                	        dateLabel.setLayoutX(15);
+                	        dateLabel.setLayoutY(310);
+                	        dueDate.setLayoutX(15);
+                	        dueDate.setLayoutY(340);
+                	        dueDate.setEditable(false);
+                	        dueDate.setMaxSize(200, 75);
+                	        dueDate.setStyle("-fx-font-size:20");
+                	        dueDate.setValue(oldTask.getDue());
+                	        
+                	        //Create Priority Label and text box
+                	        Label prioLabel = new Label("Priority Number:");
+                	        prioLabel.setFont(Font.font("verdana",
+                	        		FontWeight.NORMAL,
+                	        		FontPosture.REGULAR, 20));
+                	        prioLabel.setLayoutX(250);
+                	        prioLabel.setLayoutY(310);
+                	        
+                	        TextArea prioText = new TextArea(Integer.toString(oldTask.getPriority()));
+                	        prioText.setLayoutX(250);
+                	        prioText.setLayoutY(340);
+                	        prioText.setMinSize(200, 45);
+                	        prioText.setMaxSize(200, 45);
+                	        prioText.setStyle("-fx-font-size:20");
+                	        
+                	        Label errorLabel = new Label("Error");
+                	        errorLabel.setFont(Font.font("verdana",
+                	        		FontWeight.NORMAL,
+                	        		FontPosture.REGULAR, 20));
+                	        errorLabel.setLayoutX(500);
+                	        errorLabel.setLayoutY(280);
+                	        errorLabel.setVisible(false);
+                	        
+                	        //Create the accept button and the event on click
+                	        Button acceptButton = new Button ("Accept");
+                	        acceptButton.setStyle("-fx-font-size:20");
+                	        acceptButton.setLayoutX(550);
+                	        acceptButton.setLayoutY(340);
+                	        acceptButton.setPrefSize(150, 40);
+                	        
+                	        //
+                	        
+                	        acceptButton.setOnAction(new EventHandler<ActionEvent>() {
+                	        	@Override
+                	        	public void handle(ActionEvent event)
+                	        	{
+                	        		taskEntry newTask = new taskEntry();
+                	        		boolean validNew = true;
+                	        		int newPriority = 0;
+                	        		
+                	        		try
+                	        		{
+                	        			newPriority = Integer.parseInt(prioText.getText());
+                	        		}
+                	        		catch(NumberFormatException e)
+                	        		{
+                	        			errorLabel.setText("Priority not a number!");
+                	        			errorLabel.setVisible(true);
+                	        			validNew = false;
+                	        		}
+                	        		
+                	        		if(validNew && statusBox.getValue().equals("Not Started") && oldTask.getStatus().equals("In Progress"))
+                	        		{
+                	        			errorLabel.setText("Task already started!");
+                	        			errorLabel.setVisible(true);
+                	        			validNew = false;
+                	        		}
+                	        		
+                	        		if(validNew && statusBox.getValue().equals("Complete") && oldTask.getStatus().equals("Not Started"))
+                	        		{
+                	        			errorLabel.setText("Task was never started!");
+                	        			errorLabel.setVisible(true);
+                	        			validNew = false;
+                	        		}
+                	        		
+                	        		if(validNew && startEndDate.getValue() == null && !statusBox.getValue().equals(oldTask.getStatus()))
+                	        		{
+                	        			if(statusBox.getValue().equals("In Progress"))
+                	        				errorLabel.setText("Start Date not valid!");
+                	        			else
+                	        				errorLabel.setText("Complete Date not valid!");
+                	        			errorLabel.setVisible(true);
+                	        			validNew = false;
+                	        		}
+                	        		
+                	        		if(validNew)	//entries are valid
+                	        		{
+                	        			newTask.setDesc(descText.getText());
+                	        			newTask.setPriority(newPriority);
+                	        			newTask.setDue(dueDate.getValue());
+                	        			
+                	        			if(statusBox.getValue().equals(oldTask.getStatus()))
+                	        			{
+                	        				newTask.setStatus(statusBox.getValue());
+                	        				newTask.setStart(oldTask.getStart());
+                	        			}
+                	        			else if(statusBox.getValue().equals("In Progress"))
+                	        			{
+                	        				newTask.setStatus("In Progress");
+                	        				newTask.setStart(startEndDate.getValue());
+                	        			}
+                	        			else if(statusBox.getValue().equals("Complete"))
+                	        			{
+                	        				newTask.setStatus("Complete");
+                	        				newTask.setCompleteDate(startEndDate.getValue());
+                	        			}
+                	        			else
+                	        			{
+                	        				newTask.setStatus("Not Started");
+                	        			}
+                	        			
+                    	        		taskTable.removeTask(priorityNum);
+                    	        		if (taskTable.addToList(newTask))
+                    	        		{
+                    	        			System.out.println("VALID EDIT");
+                    	        			edit.close();
+                    	        		}
+                    	        		else
+                    	        		{
+                    	        			errorLabel.setText("Decription already used!");
+                    	        			errorLabel.setVisible(true);
+                    	        			taskTable.addToList(oldTask);
+                    	        		}
+                    	        		taskTable.refreshList(task_text, filterBox.getValue());
+                	        		}
+                	        		
+
+                	        		
+                	        		
+                	        	}
+                	        });
+                	        
+                	        //
+                	        
+                	    	Pane editPane = new Pane();
+                	    	editPane.getChildren().add(descLabel);
+                	    	editPane.getChildren().add(descText);
+                	    	editPane.getChildren().add(dateLabel);
+                	    	editPane.getChildren().add(dueDate);
+                	    	editPane.getChildren().add(prioLabel);
+                	    	editPane.getChildren().add(prioText);
+                	    	editPane.getChildren().add(acceptButton);
+                	    	editPane.getChildren().add(statusBox);
+                	    	editPane.getChildren().add(startDateLabel);
+                	    	editPane.getChildren().add(startEndDate);
+                	    	editPane.getChildren().add(errorLabel);
+                	    	Scene entryScene = new Scene(editPane);
+                	    	edit.setScene(entryScene);
+                	    	edit.showAndWait();
         	        		
         	        		editWindow.close();
         	        	}
@@ -170,10 +396,7 @@ public class App extends Application {
                     		Optional<ButtonType> response = alert.showAndWait();
                     		if(response.get() == ButtonType.OK)
                     		{
-                    			String selectedString = task_text.getSelectionModel().getSelectedItem();
-                    			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
-                    			taskEntry tempTask = taskTable.getTask(priorityNum);
-                    			System.out.println(tempTask.getTaskPrint());
+                    			System.out.println(oldTask.getTaskPrint());
                     			System.out.println(priorityNum);
                     			taskTable.deleteTask(priorityNum);
                     			taskTable.refreshList(task_text, filterBox.getValue());
@@ -199,7 +422,7 @@ public class App extends Application {
         	        	}
         	        });
         	        
-        	        TextArea task = new TextArea(tempTask.getTaskPrint());
+        	        TextArea task = new TextArea(oldTask.getTaskPrint());
         	        task.setStyle("-fx-font-size:20");
         	        task.setLayoutX(0);
         	        task.setLayoutY(0);
