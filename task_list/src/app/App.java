@@ -93,7 +93,6 @@ public class App extends Application {
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
         		{
-        			System.out.println("JACKSONS a fucking genius");
         			
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
         			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
