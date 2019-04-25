@@ -90,6 +90,7 @@ public class App extends Application {
         task_text.setLayoutY(95);
         task_text.setEditable(false);
         task_text.setStyle("-fx-font-size:20");
+
         
         //Making the drop down for filtering
         ObservableList<String> filter = 
@@ -118,9 +119,11 @@ public class App extends Application {
       	}
       	
       });
-      
+		// Autoloading tasks from text file if file exists
+		taskTable.autoLoadTasks(taskTable);
+		taskTable.refreshList(task_text, filterBox.getValue());
         
-        task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
+		task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
         	@Override
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
@@ -531,10 +534,11 @@ public class App extends Application {
         			Alert alert = new Alert(AlertType.CONFIRMATION);
         			alert.setTitle("Confirmation");
         			alert.setHeaderText(null);
-        			alert.setContentText("Are you sure you would like to delete all tasks?");
+        			alert.setContentText("Are you sure you would like to delete all tasks?"
+        					+ " All tasks in the text file will also be deleted.");
             		Optional<ButtonType> response = alert.showAndWait();
             		if(response.get() == ButtonType.OK) {
-            			taskTable.restartList(task_text);
+            			taskTable.restartList(task_text, 0);
             		}
             		else {
             			// Close the dialog
@@ -603,7 +607,7 @@ public class App extends Application {
         					+ "Are you sure you would like to delete all tasks?");
             		Optional<ButtonType> response = alert.showAndWait();
             		if(response.get() == ButtonType.OK) {
-            			taskTable.restartList(task_text);
+            			taskTable.restartList(task_text, 1);
             		}
             		else {
             			// Close the dialog

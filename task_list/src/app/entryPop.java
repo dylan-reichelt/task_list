@@ -127,6 +127,11 @@ class entryPop
         			tempTask.setDesc(descText.getText());
         			tempTask.setDue(dueDate.getValue());
         			
+        			if(prioNum <= 0)
+        			{
+        				prioNum = 1;
+        			}
+        			
         			tempTask.setPriority(prioNum);
         			if(taskTable.addToList(tempTask))
         			{
