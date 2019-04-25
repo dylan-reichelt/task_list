@@ -466,7 +466,7 @@ public class App extends Application {
         //Add Task Button Settings
         Button addButton = null;
         try {
-			FileInputStream plusPic = new FileInputStream("../resources/plus_sign.png");
+			FileInputStream plusPic = new FileInputStream("resources/plus_sign.png");
 			Image plusImage = new Image(plusPic);
 			ImageView plusView = new ImageView(plusImage);
 			plusView.setFitHeight(25);
@@ -497,7 +497,7 @@ public class App extends Application {
         //Restart Button
         Button restartButton = null;
         try {
-			FileInputStream plusPic = new FileInputStream("../resources/restart_button.png");
+			FileInputStream plusPic = new FileInputStream("resources/restart_button.png");
 			Image plusImage = new Image(plusPic);
 			ImageView plusView = new ImageView(plusImage);
 			plusView.setFitHeight(35);
