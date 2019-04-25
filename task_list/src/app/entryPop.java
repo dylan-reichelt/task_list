@@ -1,3 +1,11 @@
+/**
+ * Authors: Ignatius Akeeh, Kyle Gonzalez, Jackson Lewis, Dylan Reichelt
+ * Team Project
+ * entryPop.java
+ * This class creates the entryPopup which allows for one to create a task
+ * entry
+ */
+
 package app;
 
 import javafx.event.ActionEvent;
@@ -15,31 +23,28 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
- * This class creates the entryPopup which allows for one to create a task entry
- * 
- * @functions
- * entryWindow(Stage stage)
- * 
- * @author Dylan
- *
- */
 class entryPop
 {
+	// CLASS VARIABLES
 	taskEntry tempTask = new taskEntry();
 	int prioNum;
 	boolean prioRight = true;
 	
 	/**
-	 * Creates the entry window and then adds it to the list. If it returns that the entry is invalid then it prompts the user to
-	 * try again. If the user decides they no longer want to make a new task they simply click the x on the window.
+	 * Creates the entry window and then adds it to the list. If it returns
+	 * that the entry is invalid then it prompts the user to try again. If the
+	 * user decides they no longer want to make a new task they simply click
+	 * the x on the window.
 	 * 
-	 * @param stage
-	 * @void
+	 * @param stage is main GUI stage
+	 * @param taskTable is current taskLisk
+	 * @param text_list is the text of all sorted tasks
+	 * @param sortValue is the attribute that text_list is sorted by
 	 */
-	public void entryWindow(Stage stage, taskList taskTable, ListView<String> text_list, String sortValue)
+	public void entryWindow(Stage stage, taskList taskTable, ListView<String>
+	text_list, String sortValue)
     {
-    	//Creates the stage of the new window making it a module of the mainstage
+    	//Creates stage of the new window making it a module of the mainstage
     	Stage entryWin = new Stage();
     	entryWin.initModality(Modality.WINDOW_MODAL);
     	entryWin.initOwner(stage);
@@ -153,7 +158,8 @@ class entryPop
     		    	invalidWin.setWidth(400);
     		    	
     		    	//Label Text
-    		    	Label invalidText = new Label("This entry is invalid,\nPlease check entry and try again.");
+    		    	Label invalidText = new Label("This entry is invalid,"
+    		    			+ "\nPlease check entry and try again.");
     		    	invalidText.setFont(Font.font("verdana",
     		        		FontWeight.NORMAL,
     		        		FontPosture.REGULAR, 20));
