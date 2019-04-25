@@ -125,8 +125,6 @@ public class App extends Application {
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
         		{
-        			System.out.println("JACKSONS a fucking genius");
-        			
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
         			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
         			taskEntry tempTask = taskTable.getTask(priorityNum);
@@ -145,6 +143,15 @@ public class App extends Application {
         	        editButton.setLayoutX(50);
         	        editButton.setLayoutY(190);
         	        editButton.setPrefSize(150, 40);
+        	        
+        	        editButton.setOnAction(new EventHandler<ActionEvent>() {
+        	        	@Override
+        	        	public void handle(ActionEvent event)
+        	        	{
+        	        		
+        	        		editWindow.close();
+        	        	}
+        	        });
         	        
         	        Button deleteButton = new Button ("Delete Task");
         	        deleteButton.setStyle("-fx-font-size:20");
