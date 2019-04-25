@@ -209,6 +209,21 @@ public class taskList {
     public void restartList(ListView<String> task_text) {
     	task_text.getItems().clear();
     	taskArray.clear();
+    	File existingTaskFile = new File(System.getProperty("user.home") 
+				+ System.getProperty("file.separator") + "Downloads"
+				+ System.getProperty("file.separator") + "tasklist.txt");
+    	if(existingTaskFile.exists()) { // clears the file if it exists
+    		try {
+        		PrintWriter writer = new PrintWriter(existingTaskFile);
+        		writer.println("");
+        		writer.close();
+    		} catch(FileNotFoundException exception) {
+    			
+    		}
+
+    		
+    	}
+    	
     }
     
     /**
@@ -531,7 +546,6 @@ public class taskList {
     	
     }
     	
-    }
     
     /**
      * Will return the array number of an item based off the priority -1 (which is the index in the actual array). This
