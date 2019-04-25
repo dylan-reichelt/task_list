@@ -90,7 +90,6 @@ public class App extends Application {
         task_text.setLayoutY(95);
         task_text.setEditable(false);
         task_text.setStyle("-fx-font-size:20");
-
         
         //Making the drop down for filtering
         ObservableList<String> filter = 
@@ -119,6 +118,7 @@ public class App extends Application {
       	}
       	
       });
+      
 		// Autoloading tasks from text file if file exists
 		taskTable.autoLoadTasks(taskTable);
 		taskTable.refreshList(task_text, filterBox.getValue());

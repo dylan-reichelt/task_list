@@ -545,8 +545,7 @@ public class taskList {
     	return validFile; // if no flags are true, proceed
     	
     }
-    	
-    
+
     /**
      * Will return the array number of an item based off the priority -1 (which is the index in the actual array). This
      * will allow for edit and other things to access a task when it's not in the priority order in the filter.
