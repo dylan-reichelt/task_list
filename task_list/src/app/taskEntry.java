@@ -6,6 +6,7 @@ public class taskEntry {
 	private String Description;
 	private LocalDate dueDate;
 	private LocalDate startDate;
+	private LocalDate completeDate;
 	
 	private int status = 0;
 	private int priority;
@@ -30,9 +31,33 @@ public class taskEntry {
 		dueDate = due;
 	}
 	
+	public void setCompleteDate(LocalDate complete)
+	{
+		completeDate = complete;
+	}
+	
 	public void setStatus(int tempStatus)
 	{
 		status = tempStatus;
+	}
+	
+	public void setStatus(String newStatus)
+	{
+		switch(newStatus)
+		{
+		case "Not Started":
+			status = 0;
+			break;
+		case "In Progress":
+			status = 1;
+			break;
+		case "Complete":
+			status = 2;
+			break;
+		case "Deleted":
+			status = 3;
+			break;
+		}
 	}
 	
 	public String getDesc()
@@ -53,6 +78,11 @@ public class taskEntry {
 	public LocalDate getStart()
 	{
 		return startDate;
+	}
+	
+	public LocalDate getCompleteDate()
+	{
+		return completeDate;
 	}
 	
 	public String getStatus()

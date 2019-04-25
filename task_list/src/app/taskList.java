@@ -37,6 +37,20 @@ public class taskList {
 	}
 	
 	/**
+	 * Remove function for editing
+	 * @param index
+	 */
+	public void removeTask(int index)
+	{
+		for(int i = index; i < taskArray.size() - 1; i++) {
+			taskArray.set(i, taskArray.get(i + 1));
+			taskArray.get(i).setPriority(i + 1);
+		}
+		
+		taskArray.remove(taskArray.size() - 1);
+	}
+	
+	/**
      * Prints out the tasks to the task_text box
      */
   public void refreshList(ListView<String> task_text, String sortValue)
@@ -156,8 +170,16 @@ public class taskList {
      */
     public boolean addToList(taskEntry task)
     {
+    	if(task.getNumericalStatus() == 2) {
+    		deletedTasks.add(task);
+    		return true;
+    	}
+    	
     	int location = 0;
     	boolean priorityHit = false;
+    	
+    	if(task.getPriority() < 1)
+    		task.setPriority(1);
     	
     	if(isValid(task))
     	{
