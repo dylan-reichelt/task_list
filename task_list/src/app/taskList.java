@@ -23,20 +23,129 @@ import javafx.util.Callback;
 
 public class taskList {
 	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>(); // List for the tasks
+	ArrayList<taskEntry> deletedTasks = new ArrayList<taskEntry>();
+	
+	public void deleteTask(int index) {
+		for(int i = index; i < taskArray.size() - 1; i++) {
+			taskArray.set(i, taskArray.get(i + 1));
+			taskArray.get(i).setPriority(i + 1);
+		}
+		
+		deletedTasks.add(taskArray.get(taskArray.size() - 1));
+		taskArray.remove(taskArray.size() - 1);
+		
+	}
 	
 	/**
      * Prints out the tasks to the task_text box
      */
-    public void refreshList(ListView<String> task_text)
-    {
-    	task_text.getItems().clear();
-    	for(int i = 0; i < taskArray.size(); i++)
-    	{
-    		taskEntry tempEntry = taskArray.get(i);
-    		String input = tempEntry.getTaskPrint();
-    		task_text.getItems().add(input);
-    	} 
-    }
+  public void refreshList(ListView<String> task_text, String sortValue)
+  {
+  	
+  	taskEntry[] sortedArray = new taskEntry[taskArray.size()];
+		int inserted;
+		
+		switch(sortValue)
+		{
+		case "Description":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getDesc().compareTo(sortedArray[sortedIndex].getDesc()) > 0)
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN DESCRIPTION");
+			break;
+		case "Due Date":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getDue().compareTo(sortedArray[sortedIndex].getDue()) > 0)
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN STATUS");
+			break;
+		case "Status":
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getNumericalStatus() > (sortedArray[sortedIndex].getNumericalStatus()))
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN STATUS");
+			break;
+		default:
+			if(taskArray.size() != 0)
+				sortedArray[0] = taskArray.get(0);
+			inserted = 1;
+			for(int taskIndex = 1; taskIndex < sortedArray.length; taskIndex++)
+			{
+				int sortedIndex = 0;
+				while(sortedIndex < inserted && taskArray.get(taskIndex).getPriority() > (sortedArray[sortedIndex].getPriority()))
+				{
+					sortedIndex++;
+				}
+				
+				for(int insertIndex = inserted; insertIndex > sortedIndex; insertIndex--)
+				{
+					sortedArray[insertIndex] = sortedArray[insertIndex - 1];
+				}
+				
+				sortedArray[sortedIndex] = taskArray.get(taskIndex);
+				inserted++;
+			}
+			System.out.println("RAN DEFAULT");
+			break;
+		}
+  	
+  	
+  	task_text.getItems().clear();
+  	for(int i = 0; i < sortedArray.length; i++)
+  	{
+  		taskEntry tempEntry = sortedArray[i];
+  		String input = tempEntry.getTaskPrint();
+  		task_text.getItems().add(input);
+  	} 
+  }
     
     /**
      * Adds a task to the list taskArray. If it is added returns true. If it is not a valid task then it returns false and won't add it
@@ -165,90 +274,103 @@ public class taskList {
     }
    
     /**
-     * Parses the selected file into entries that will be added to the task list. The ListView's 
-     * contents will be updated to display the loaded entries. If a valid file is not chosen, an
-     * error message will be displayed.
+     * Parses the selected file into entries that will be added to the task list if the "Load" button is 
+     * clicked. The ListView's contents will be updated to display the loaded entries. If a valid file is
+     *  not chosen, an error message will be displayed.
      * 
-     * @param 
-     * @return textParse returns a String that will be written to a text file in order to be parsed into
-     * 		   the task list at a later point in time	
+     * @param taskTable the list of tasks 
      */
     public void loadList(taskList taskTable) {
-    	ArrayList<taskEntry> taskArray = new ArrayList<taskEntry>();
-		JFileChooser chooser = new JFileChooser(); // allows user selection of documents
-		chooser.setCurrentDirectory(new File(System.getProperty("user.home") // setting default directory to downloads folder
-				+ System.getProperty("file.separator") + "Downloads"));
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt"); // apply text file filter
-		chooser.setFileFilter(filter); 
-		int returnVal = chooser.showOpenDialog(null);
-		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			System.out.println("You opened " + chooser.getSelectedFile().getName());
-			String filename = chooser.getSelectedFile().getName();
-			String path = chooser.getSelectedFile().getPath();
-			try {
-    			File listFile = new File(path);
-    			if(verifyParse(listFile) == true) { // continue if the text file is valid
-    				BufferedReader br = new BufferedReader(new FileReader(listFile)); 
-            		String read; 
-            		try {
-            			while ((read = br.readLine()) != null && !(read.equals(""))) {
-            				System.out.println("PARSING...");
-            				String [] parsedLine = read.split(", "); // split line into an array using , as a delimiter
-            				
-            				String description = parsedLine[0];
-            				System.out.println("description = " + description);
-            				
-            				int priority = Integer.parseInt(parsedLine[1]);
-            				System.out.println("priority = " + priority);
-            				
-            				LocalDate startDate;
-            				DateTimeFormatter format = DateTimeFormatter.ofPattern("dd LLLL yyyy");
-            				if(parsedLine[2].equals("not set")) { // set start date to null if it has not been assigned
-            					startDate = null;
-            				}else { // assign start date if it is assigned
-            					startDate = LocalDate.parse(parsedLine[2], format);
-            				}
+			JFileChooser chooser = new JFileChooser(); // allows user selection of documents
+			chooser.setCurrentDirectory(new File(System.getProperty("user.home") // setting default directory to downloads folder
+						+ System.getProperty("file.separator") + "Downloads"));
+			FileNameExtensionFilter filter = new FileNameExtensionFilter(".txt", "txt"); // apply text file filter
+			chooser.setFileFilter(filter); 
+			int returnVal = chooser.showOpenDialog(null);
+			if(returnVal == JFileChooser.APPROVE_OPTION) {
+					System.out.println("You opened " + chooser.getSelectedFile().getName());
+					String path = chooser.getSelectedFile().getPath();
+					File newTaskFile = new File(path);
+					taskTable.loadTasks(taskTable, newTaskFile);
+			}
+    }
 
-            				System.out.println("start date = " + startDate);
-            				
-            				LocalDate endDate = LocalDate.parse(parsedLine[3], format);
-            				System.out.println("end date = " + endDate);
-            				
-            				int status = 0;
-            				// Chooses which status to assign to the taskLoad object
-            				if(parsedLine[4].equals("Not Started")) {
-            					status = 0;
-            				}
-            				else if(parsedLine[4].equals("In Progress")) {
-            					status = 1;
-            				}
-            				else if(parsedLine[4].equals("Complete")) {
-            					status = 2;
-            				}
-            				else if(parsedLine[4].equals("Deleted")) {
-            					status = 3;
-            				}
-            				System.out.println("status = " + status);
-            				
-            				// Creates new taskEntry object with obtained variables
-            				taskEntry taskLoad = new taskEntry();
-            				taskLoad.setDesc(description);
-            				taskLoad.setPriority(priority);
-            				taskLoad.setStart(startDate);
-            				taskLoad.setDue(endDate);
-            				taskLoad.setStatus(status);
-            				
-            				taskTable.addToList(taskLoad); // adds task to the list
-            				
-            			}
-            		}catch(IOException exception) {
-        			
-        		}
-    		}
-    		}catch(FileNotFoundException exception) {
-    			
-    		}
-		}
+		/**
+     * If there is currently a parsable file named "tasklist.txt" in the downloads directory of the user's 
+     * computer, that file will be parsed into the task list as soon as the app is started.
+     * 
+     * @param taskTable pass the table that will be filled with tasks from tasklist.txt
+     */
+    public void autoLoadTasks(taskList taskTable) {
+				File existingTaskFile = new File(System.getProperty("user.home") 
+					+ System.getProperty("file.separator") + "Downloads"
+					+ System.getProperty("file.separator") + "tasklist.txt");
+				// if a file called "tasklist.txt" exists in the downloads directory and it is parsable,
+				// that file will be loaded
+			if(existingTaskFile.exists() && verifyParse(existingTaskFile) == true) {
+				taskTable.loadTasks(taskTable, existingTaskFile);
+			}else {
+				System.out.println("There is not file named tasklist.txt in the Downloads directory.");
+			}
+    }
+
+		/**
+     * Parses the tasklist.txt into the task array list. Uses values indicated from tasklist.txt
+     * to create objects to load into the list.
+     * 
+     * @param taskTable passes the list that will be filled with the list from the text file
+     * @param taskFile passes the file that will be checked if it is valid to parse, then values from
+     * 					this text file will be used for the list.
+     */
+    private void loadTasks(taskList taskTable, File taskFile) {
+				try {
+					if(verifyParse(taskFile) == true) { // continue if the text file is valid
+						BufferedReader br = new BufferedReader(new FileReader(taskFile)); 
+						String read; 
+								try {
+									while ((read = br.readLine()) != null && !(read.equals(""))) {
+										System.out.println("PARSING...");
+										String [] parsedLine = read.split(", "); // split line into an array using , as a delimiter
+										
+										String description = parsedLine[0];
+										
+										int priority = Integer.parseInt(parsedLine[1]);
+										
+										LocalDate startDate;
+										DateTimeFormatter format = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+										if(parsedLine[2].equals("not set")) { // set start date to null if it has not been assigned
+											startDate = null;
+										}else { // assign start date if it is assigned
+											startDate = LocalDate.parse(parsedLine[2], format);
+										}
+										
+										LocalDate endDate = LocalDate.parse(parsedLine[3], format);
+										
+										int status = 0;
+										// Chooses which status to assign to the taskLoad object
+										if(parsedLine[4].equals("Not Started")) { status = 0; }
+										else if(parsedLine[4].equals("In Progress")) { status = 1; }
+										else if(parsedLine[4].equals("Complete")) { status = 2; }
+										else if(parsedLine[4].equals("Deleted")) { status = 3; }
+										
+										// Creates new taskEntry object with obtained variables
+										taskEntry taskLoad = new taskEntry();
+										taskLoad.setDesc(description);
+										taskLoad.setPriority(priority);
+										taskLoad.setStart(startDate);
+										taskLoad.setDue(endDate);
+										taskLoad.setStatus(status);
+										
+										taskTable.addToList(taskLoad); // adds task to the list
+										
+									}
+								}catch(IOException exception) {
+									System.out.println("IOException");
+						}
+				}
+				}catch(FileNotFoundException exception) {
+					System.out.println("file not found");
+			}
     }
 
     
@@ -266,18 +388,23 @@ public class taskList {
     		taskEntry tempTask = taskArray.get(num);
     		if(tempTask.getDesc().equalsIgnoreCase(task.getDesc()))
     		{
-    			System.out.println("NOT VALID 1");
     			valid = false;
     	
     		}
     	}
-    	System.out.println(task.getDue());
+    	for(int num = 0; num < deletedTasks.size(); num++)
+    	{
+    		taskEntry tempTask = deletedTasks.get(num);
+    		if(tempTask.getDesc().equalsIgnoreCase(task.getDesc()))
+    		{
+    			valid = false;
+    	
+    		}
+    	}
     	if(task.getDesc() == null || task.getDue() == null)
 		{
-    		System.out.println("NOT VALID 2");
     		valid = false;
 		}
-    	System.out.println("VALID");
     	return valid;
     
     }
@@ -373,14 +500,12 @@ public class taskList {
         					invalidLength = true; // true if the line cannot be parsed into a String array with 5 elements
         					System.out.println("The file is invalid.");
         				}
-      
         			}
     			}
     			else {
     				invalidLength = true; // true if the file is empty
     				System.out.println("Invalid. The file is empty");
     			}
-
     		}catch(IOException exception) {
     			
     		}
@@ -405,4 +530,40 @@ public class taskList {
     	return validFile; // if no flags are true, proceed
     	
     }
+    	
+    }
+    
+    /**
+     * Will return the array number of an item based off the priority -1 (which is the index in the actual array). This
+     * will allow for edit and other things to access a task when it's not in the priority order in the filter.
+     * the string must be in the format:
+     * 
+     *  Description: Hm
+	 *	Priority: 1
+	 *	Start Date: NA
+	 *	Due Date: 2019-04-27
+	 *	Status: Not Started
+     * 
+     * @param input
+     * @return int
+     */
+	public int stringToPriority(String input)
+	{
+		String lines[] = input.split("\\r?\\n");
+		String prioritySplit[] = lines[1].split(" ");
+		int priorityInt = Integer.parseInt(prioritySplit[1]);
+		return priorityInt;
+	}
+	
+    /**
+     * Returns a taskEntry in the taskArray to allow something to grab it
+     * 
+     * @param arrayNum
+     * @return taskEntry
+     */
+    public taskEntry getTask(int arrayNum)
+    {
+    	return taskArray.get(arrayNum);
+    }
 }
+
