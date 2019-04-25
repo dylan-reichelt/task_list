@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 //import com.sun.javafx.binding.Logging;
 
@@ -88,11 +90,42 @@ public class App extends Application {
         task_text.setLayoutY(95);
         task_text.setEditable(false);
         task_text.setStyle("-fx-font-size:20");
+        
+        //Making the drop down for filtering
+        ObservableList<String> filter = 
+        	FXCollections.observableArrayList(
+        			"Filter By...",
+        			"Description",
+        			"Due Date",
+        			"Priority",
+        			"Status");
+        
+        
+        final ComboBox<String> filterBox = new ComboBox<String>(filter);
+        filterBox.setPrefSize(250, 50);
+        filterBox.setLayoutX(275);
+        filterBox.setLayoutY(20);
+        filterBox.setStyle("-fx-font-size:20");
+        
+        if(filterBox.getValue() == null)
+        {
+        	filterBox.setValue("Filter By...");
+        }
+      filterBox.valueProperty().addListener(new ChangeListener<String>() {
+
+      	@Override public void changed(ObservableValue val, String t, String t1) {
+      		taskTable.refreshList(task_text, filterBox.getValue());
+      	}
+      	
+      });
+      
+        
         task_text.setOnMouseClicked(new EventHandler<MouseEvent>(){
         	@Override
         	public void handle(MouseEvent click) {
         		if(click.getClickCount() == 2)
         		{
+        			System.out.println("JACKSONS a fucking genius");
         			
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
         			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
@@ -136,7 +169,7 @@ public class App extends Application {
                     			System.out.println(tempTask.getTaskPrint());
                     			System.out.println(priorityNum);
                     			taskTable.deleteTask(priorityNum);
-                    			taskTable.refreshList(task_text);
+                    			taskTable.refreshList(task_text, filterBox.getValue());
                     			editWindow.close();
                     		}
                     		else {
@@ -190,7 +223,7 @@ public class App extends Application {
             			System.out.println(tempTask.getTaskPrint());
             			System.out.println(priorityNum);
             			taskTable.deleteTask(priorityNum);
-            			taskTable.refreshList(task_text);
+            			taskTable.refreshList(task_text, filterBox.getValue());
             		}
             		else {
             			// Close the dialog
@@ -199,27 +232,6 @@ public class App extends Application {
         	}
         });
         
-        
-        //Making the drop down for filtering
-        ObservableList<String> filter = 
-        	FXCollections.observableArrayList(
-        			"Filter By...",
-        			"Description",
-        			"Due Date",
-        			"Priority",
-        			"Status");
-        
-        
-        final ComboBox<String> filterBox = new ComboBox<String>(filter);
-        filterBox.setPrefSize(250, 50);
-        filterBox.setLayoutX(275);
-        filterBox.setLayoutY(20);
-        filterBox.setStyle("-fx-font-size:20");
-        
-        if(filterBox.getValue() == null)
-        {
-        	filterBox.setValue("Filter By...");
-        }
         
         //Add Task Button Settings
         Button addButton = null;
@@ -246,7 +258,7 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		entryPop tempWin = new entryPop();
-        		tempWin.entryWindow(stage, taskTable, task_text);
+        		tempWin.entryWindow(stage, taskTable, task_text, filterBox.getValue());
         	}
         });
         // deleted = -1
@@ -368,7 +380,7 @@ public class App extends Application {
             		}
         		}
             	taskTable.loadList(taskTable);
-            	taskTable.refreshList(task_text);
+            	taskTable.refreshList(task_text, filterBox.getValue());
         	}
         });
         
