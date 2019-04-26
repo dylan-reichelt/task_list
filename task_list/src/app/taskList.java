@@ -28,8 +28,6 @@ public class taskList {
 	ArrayList<taskEntry> deletedTasks = new ArrayList<taskEntry>();
 	
 	public void deleteTask(int index) {
-		System.out.println("START OF DELETE");
-		System.out.println(index);
 		
 		deletedTasks.add(taskArray.get(index));
 		for(int i = index; i < taskArray.size() - 1; i++) {
@@ -686,8 +684,8 @@ public class taskList {
         		if(tempTask.getStatus().equals("Complete"))
         		{
         			pw.println("Started on " + tempTask.getStart().toString());
-        			pw.println("Completed on " + tempTask.getCompleteDate()
-        				.toString());
+        			System.out.println(tempTask.getCompleteDate());
+        			pw.println("Completed on " + tempTask.getCompleteDate().toString());
         		}
         		else
         		{

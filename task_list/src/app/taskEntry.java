@@ -33,6 +33,7 @@ public class taskEntry {
 	
 	public void setCompleteDate(LocalDate complete)
 	{
+		System.out.println("HELLOOOOO");
 		completeDate = complete;
 	}
 	

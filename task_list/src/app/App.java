@@ -332,7 +332,7 @@ public class App extends Application {
                 	        			}
                 	        			else if(statusBox.getValue().equals("Complete"))
                 	        			{
-								newTask.setStart(oldTask.getStart());
+                	        				newTask.setStart(oldTask.getStart());
                 	        				newTask.setStatus("Complete");
                 	        				newTask.setCompleteDate(startEndDate.getValue());
                 	        			}
