@@ -332,6 +332,7 @@ public class App extends Application {
                 	        			}
                 	        			else if(statusBox.getValue().equals("Complete"))
                 	        			{
+								newTask.setStart(oldTask.getStart());
                 	        				newTask.setStatus("Complete");
                 	        				newTask.setCompleteDate(startEndDate.getValue());
                 	        			}
@@ -554,6 +555,14 @@ public class App extends Application {
         printButton.setLayoutX(950);
         printButton.setLayoutY(20);
         printButton.setPrefSize(150, 50);
+	    
+	printButton.setOnAction(new EventHandler<ActionEvent>() {
+       		@Override
+        	public void handle(ActionEvent event)
+        	{
+        		taskTable.print();
+        	}
+        });
         
         //Save Button
         Button saveButton = new Button ("Save");
