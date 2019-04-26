@@ -568,7 +568,7 @@ public class App extends Application {
                 VBox dialogVbox = new VBox(20);
                 dialogVbox.getChildren().add(new Text("The print report will be saved\nin your Downloads folder under \"Report\""));
                 dialogVbox.setStyle("-fx-fon-size:20");
-                Scene dialogScene = new Scene(dialogVbox, 250, 60);
+                Scene dialogScene = new Scene(dialogVbox, 300, 60);
                 dialog.setScene(dialogScene);
                 dialog.show();
         	}
