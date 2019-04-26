@@ -266,6 +266,10 @@ public class taskList {
     	return taskArray.size();
     }
     
+    public int deleteSize()
+    {
+    	return deletedTasks.size();
+    }
     /**
      * Parses the current entries in the array list to a String format. The format it is written
      * in is description, priority number, start date, due date, and status.

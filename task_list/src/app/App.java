@@ -575,7 +575,7 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		// Error message will appear if the list is empty
-        		if(taskTable.getSize() == 0) { 
+        		if(taskTable.getSize() == 0 && taskTable.deleteSize() == 0) { 
         			Alert alert = new Alert(AlertType.INFORMATION);
         			alert.setTitle("Error - Task List is empty");
         			alert.setHeaderText(null);
