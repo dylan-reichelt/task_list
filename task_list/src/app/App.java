@@ -129,6 +129,7 @@ public class App extends Application {
         		if(click.getClickCount() == 2)
         		{
         			String selectedString = task_text.getSelectionModel().getSelectedItem();
+        			System.out.println(selectedString);
         			int priorityNum = taskTable.stringToPriority(selectedString) - 1;
         			taskEntry oldTask = taskTable.getTask(priorityNum);
         			

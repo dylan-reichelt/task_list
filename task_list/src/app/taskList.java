@@ -33,7 +33,7 @@ public class taskList {
 			taskArray.get(i).setPriority(i + 1);
 		}
 		
-		deletedTasks.add(taskArray.get(taskArray.size() - 1));
+		deletedTasks.add(taskArray.get(index));
 		taskArray.remove(taskArray.size() - 1);
 	}
 
@@ -236,20 +236,21 @@ public class taskList {
     public void restartList(ListView<String> task_text, int restartOrLoad) {
     	task_text.getItems().clear();
     	taskArray.clear();
+    	deletedTasks.clear();
     	File existingTaskFile = new File(System.getProperty("user.home") 
 				+ System.getProperty("file.separator") + "Downloads"
 				+ System.getProperty("file.separator") + "tasklist.txt");
-//    	if(restartOrLoad == 0) { // clear the task file if "restart" is chosen
-//    		if(existingTaskFile.exists()) { // clears the file if it exists
-//        		try {
-//            		PrintWriter writer = new PrintWriter(existingTaskFile);
-//            		writer.println("");
-//            		writer.close();
-//        		} catch(FileNotFoundException exception) {
-//        			
-//        		}
-//        	}
-//    	}
+    	if(restartOrLoad == 0) { // clear the task file if "restart" is chosen
+    		if(existingTaskFile.exists()) { // clears the file if it exists
+        		try {
+            		PrintWriter writer = new PrintWriter(existingTaskFile);
+            		writer.println("");
+            		writer.close();
+        		} catch(FileNotFoundException exception) {
+        			
+        		}
+        	}
+    	}
     }
     
     /**
@@ -622,9 +623,9 @@ public class taskList {
 	public int stringToPriority(String input)
 	{
 		String lines[] = input.split("Priority: ");
-		System.out.println(lines[1]);
 		String prioritySplit[] = lines[1].split("\n");
 		int priorityInt = Integer.parseInt(prioritySplit[0]);
+		System.out.println("PRIORITY INT: " + priorityInt);
 		return priorityInt;
 	}
 	
