@@ -41,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 import javafx.collections.FXCollections;
@@ -561,6 +562,15 @@ public class App extends Application {
         	public void handle(ActionEvent event)
         	{
         		taskTable.print();
+        		final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(stage);
+                VBox dialogVbox = new VBox(20);
+                dialogVbox.getChildren().add(new Text("The print report will be saved\nin your Downloads folder under \"Report\""));
+                dialogVbox.setStyle("-fx-fon-size:20");
+                Scene dialogScene = new Scene(dialogVbox, 250, 60);
+                dialog.setScene(dialogScene);
+                dialog.show();
         	}
         });
         
