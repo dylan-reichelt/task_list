@@ -1,9 +1,18 @@
+/**
+ * Authors: Ignatius Akeeh, Kyle Gonzalez, Jackson Lewis, Dylan Reichelt
+ * Team Project
+ * taskEntry.java
+ * This class is the task entry object that stores information about the task
+ */
+
 package app;
 
 import java.time.LocalDate;
 
-public class taskEntry {
-	private String Description;
+public class taskEntry
+{
+	// CLASS VARIABLES
+	private String description;
 	private LocalDate dueDate;
 	private LocalDate startDate;
 	private LocalDate completeDate;
@@ -11,37 +20,64 @@ public class taskEntry {
 	private int status = 0;
 	private int priority;
 	
-	public void setDesc(String description)
+	/**
+	 * Set Description
+	 * @param newDescription
+	 */
+	public void setDesc(String newDescription)
 	{
-		Description = description;
+		description = newDescription;
 	}
 	
-	public void setPriority(int tempPrio)
+	/**
+	 * Set Priority
+	 * @param newPriority
+	 */
+	public void setPriority(int newPriority)
 	{
-		priority = tempPrio;
+		priority = newPriority;
 	}
 	
-	public void setStart(LocalDate start)
+	/**
+	 * Set Start Date
+	 * @param newStart
+	 */
+	public void setStart(LocalDate newStart)
 	{
-		startDate = start;
+		startDate = newStart;
 	}
 	
-	public void setDue(LocalDate due)
+	/**
+	 * Set Due Date
+	 * @param newDueDate
+	 */
+	public void setDue(LocalDate newDueDate)
 	{
-		dueDate = due;
+		dueDate = newDueDate;
 	}
 	
-	public void setCompleteDate(LocalDate complete)
+	/**
+	 * Set date task was completed
+	 * @param newComplete
+	 */
+	public void setCompleteDate(LocalDate newComplete)
 	{
-		System.out.println("HELLOOOOO");
-		completeDate = complete;
+		completeDate = newComplete;
 	}
 	
-	public void setStatus(int tempStatus)
+	/**
+	 * Set Status using integer
+	 * @param newStatus
+	 */
+	public void setStatus(int newStatus)
 	{
-		status = tempStatus;
+		status = newStatus;
 	}
 	
+	/**
+	 * Set Status using string
+	 * @param newStatus
+	 */
 	public void setStatus(String newStatus)
 	{
 		switch(newStatus)
@@ -61,31 +97,55 @@ public class taskEntry {
 		}
 	}
 	
+	/**
+	 * Returns task description
+	 * @return
+	 */
 	public String getDesc()
 	{
-		return Description;
+		return description;
 	}
 	
+	/**
+	 * Returns task priority
+	 * @return
+	 */
 	public int getPriority()
 	{
 		return priority;
 	}
 	
+	/**
+	 * Returns task due date
+	 * @return
+	 */
 	public LocalDate getDue()
 	{
 		return dueDate;
 	}
 	
+	/**
+	 * Returns task start date
+	 * @return
+	 */
 	public LocalDate getStart()
 	{
 		return startDate;
 	}
 	
+	/**
+	 * Returns task completed date
+	 * @return
+	 */
 	public LocalDate getCompleteDate()
 	{
 		return completeDate;
 	}
 	
+	/**
+	 * Returns task status as a string
+	 * @return
+	 */
 	public String getStatus()
 	{
 		if(status == 0)
@@ -107,11 +167,19 @@ public class taskEntry {
 		return "Not Started";
 	}
 	
+	/**
+	 * Returns task status as an integer
+	 * @return
+	 */
 	public int getNumericalStatus()
 	{
 		return status;
 	}
 	
+	/**
+	 * Returns formated string of task information
+	 * @return
+	 */
 	public String getTaskPrint()
 	{
 		String tempString = "Description: " + getDesc() + "\n" +
