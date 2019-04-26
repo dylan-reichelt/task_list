@@ -28,13 +28,16 @@ public class taskList {
 	ArrayList<taskEntry> deletedTasks = new ArrayList<taskEntry>();
 	
 	public void deleteTask(int index) {
+		System.out.println("START OF DELETE");
+		System.out.println(index);
+		
+		deletedTasks.add(taskArray.get(index));
 		for(int i = index; i < taskArray.size() - 1; i++) {
 			taskArray.set(i, taskArray.get(i + 1));
 			taskArray.get(i).setPriority(i + 1);
 		}
 		
-		deletedTasks.add(taskArray.get(index));
-		taskArray.remove(taskArray.size() - 1);
+		taskArray.remove(taskArray.get(index));
 	}
 
 	
