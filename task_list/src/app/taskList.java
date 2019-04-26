@@ -639,5 +639,71 @@ public class taskList {
     {
     	return taskArray.get(arrayNum);
     }
+	
+    public void print()
+    {
+    	try {
+        	String home = System.getProperty("user.home");
+        	String fileName = "Report";
+        	
+        	File file = new File(home + "/Downloads/" + fileName + ".txt");
+        	PrintWriter pw = new PrintWriter(file);
+        	pw.println("To Do List");
+        	pw.println();
+        	
+        	for (int index = 0; index < taskArray.size(); index++)
+        	{
+        		taskEntry tempTask = taskArray.get(index);
+        		pw.println(tempTask.getDesc());
+        		pw.println("Priority: " + tempTask.getPriority());
+        		pw.println("Due on " + tempTask.getDue().toString());
+        		
+        		if(tempTask.getStatus().equals("In Progress"))
+        		{
+        			pw.println("Started on " + tempTask.getStart().toString());
+        		}
+        		else
+        		{
+        			pw.println("Not Started");
+        		}
+        		
+        		pw.println();
+        	}
+        	
+        	for (int index = 0; index < deletedTasks.size(); index++)
+        	{
+        		taskEntry tempTask = deletedTasks.get(index);
+        		pw.println(tempTask.getDesc());
+        		pw.println("Due " + tempTask.getDue().toString());
+        		
+        		if(tempTask.getStatus().equals("Complete"))
+        		{
+        			pw.println("Started on " + tempTask.getStart().toString());
+        			pw.println("Completed on " + tempTask.getCompleteDate()
+        				.toString());
+        		}
+        		else
+        		{
+        			if(tempTask.getStart() == null)
+        			{
+        				pw.println("Not Started");
+        			}
+        			else
+        			{
+        				pw.println("Started on " + tempTask.getStart()
+        					.toString());
+        			}
+        			
+        			pw.println("Deleted");
+        		}
+        		
+        		pw.println();
+        	}
+        	
+        	pw.close();
+    	} catch (FileNotFoundException e) {
+    		e.printStackTrace();
+    	}
+    }
 }
 
